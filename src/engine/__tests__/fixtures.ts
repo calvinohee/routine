@@ -64,3 +64,35 @@ export function amSession(date: IsoDate, overrides: Partial<Session> = {}): Sess
     ...overrides,
   }
 }
+
+import type { Settings } from '../types'
+import { DEFAULT_WEATHER_THRESHOLDS } from '../weather'
+
+/** Seed-default settings (brief Section 11). */
+export function makeSettings(overrides: Partial<Settings> = {}): Settings {
+  return {
+    coordinates: { lat: -33.8688, lon: 151.2093, label: 'Sydney' },
+    quotas: { bha: 3, tn: 2, clay: 1, vc100: 1 },
+    preassigned: { clay: 'thursday', vc100: 'saturday' },
+    weeklySchedule: {
+      monday: 'gym-office',
+      tuesday: 'gym-office',
+      wednesday: 'gym-office',
+      thursday: 'gym-office',
+      friday: 'gym-office',
+      saturday: 'outdoor-run-day',
+      sunday: 'rest-indoors',
+    },
+    weatherThresholds: DEFAULT_WEATHER_THRESHOLDS,
+    adapalene: {
+      phase: 'full-face-1x',
+      phaseStart: '2026-06-30',
+      lastApplication: '2026-06-30',
+      firstFullFace: '2026-06-30',
+    },
+    benzacMode: null,
+    establishedUnlocks: { tnOnAdapaleneNights: false, vc100OnAdapaleneNights: false },
+    theme: 'system',
+    ...overrides,
+  }
+}

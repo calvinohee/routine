@@ -215,3 +215,49 @@ describe('validateRoutineSafety — resolved-step invariants', () => {
     expect(validateRoutineSafety(steps, PRODUCTS, 'pm')).toEqual([])
   })
 })
+
+describe('validateRoutineSafety — refinements', () => {
+  test('rule 9: cleanser steps before a patch are fine (patches go on CLEAN skin)', () => {
+    const steps = [
+      productStep('curel-foaming-wash'),
+      patchStep('vt-pro-cica-patch'),
+      productStep('pc-skin-balancing-toner'),
+    ]
+    expect(validateRoutineSafety(steps, PRODUCTS, 'pm')).toEqual([])
+  })
+
+  test('rule 9: a null-product action step (water splash) before a patch is fine', () => {
+    const steps: RoutineStep[] = [
+      { kind: 'product', productId: null, title: 'Water splash', purpose: '', technique: '', waitMinutes: 0 },
+      patchStep('vt-pro-cica-patch'),
+      productStep('pc-skin-balancing-toner'),
+    ]
+    expect(validateRoutineSafety(steps, PRODUCTS, 'pm')).toEqual([])
+  })
+
+  test('rule 5: a strong active on a clay night is a violation', () => {
+    const steps = [productStep('lrp-effaclar-clay'), productStep('cosdebaha-tn')]
+    expect(validateRoutineSafety(steps, PRODUCTS, 'pm').length).toBeGreaterThan(0)
+  })
+
+  test('rule 5: a strong active on a sheet-mask night is a violation', () => {
+    const steps = [productStep('vc100-sheet-mask'), productStep('pc-bha')]
+    expect(validateRoutineSafety(steps, PRODUCTS, 'pm').length).toBeGreaterThan(0)
+  })
+
+  test('rule 5 / 5.8: TN sharing an adapalene night passes only with the established unlock', () => {
+    const steps = [productStep('cosdebaha-tn'), productStep('differin-adapalene')]
+    expect(validateRoutineSafety(steps, PRODUCTS, 'pm').length).toBeGreaterThan(0)
+    expect(
+      validateRoutineSafety(steps, PRODUCTS, 'pm', { establishedTnUnlock: true }),
+    ).toEqual([])
+  })
+
+  test('rule 5 / 5.8: VC100 sharing an adapalene night passes only with the established unlock', () => {
+    const steps = [productStep('vc100-sheet-mask'), productStep('differin-adapalene')]
+    expect(validateRoutineSafety(steps, PRODUCTS, 'pm').length).toBeGreaterThan(0)
+    expect(
+      validateRoutineSafety(steps, PRODUCTS, 'pm', { establishedVc100Unlock: true }),
+    ).toEqual([])
+  })
+})

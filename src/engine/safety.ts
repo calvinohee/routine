@@ -68,6 +68,17 @@ function tagsOf(step: RoutineStep, products: Product[]): string[] {
 }
 
 /**
+ * Section 5.8 established-phase unlocks — the only sanctioned relaxations,
+ * and only ever enabled by explicit user config once phase = established.
+ */
+export interface SafetyUnlocks {
+  /** TN may share an adapalene night. */
+  establishedTnUnlock?: boolean
+  /** VC100 sheet mask may share an adapalene night. */
+  establishedVc100Unlock?: boolean
+}
+
+/**
  * Invariant checker over a resolved step list. Returns human-readable
  * violations — a correct engine always produces an empty array, and the
  * generator asserts this before returning a routine.
@@ -76,10 +87,12 @@ export function validateRoutineSafety(
   steps: RoutineStep[],
   products: Product[],
   slot: Slot,
+  unlocks: SafetyUnlocks = {},
 ): string[] {
   const violations: string[] = []
   const ids = steps.map((s) => s.productId)
   const has = (id: string) => ids.includes(id)
+  const tagPresent = (tag: string) => steps.some((s) => tagsOf(s, products).includes(tag))
 
   if (slot === 'pm') {
     // Rule 1 — Melano CC Men is AM-only, always; never two salicylic-acid sources in one PM.
@@ -91,18 +104,24 @@ export function validateRoutineSafety(
       violations.push('Two salicylic-acid sources in one PM')
     }
 
-    // Rule 4 — one leave-on active serum per PM (BHA, retinoid, TN count; vitamin C does not).
+    // Rule 4 — one leave-on active serum per PM (BHA, retinoid, TN count; vitamin C
+    // does not). Sole exception: TN sharing an adapalene night under the 5.8 unlock.
     const leaveOnActives = steps.filter((s) => {
       const tags = tagsOf(s, products)
       return tags.includes('bha') || tags.includes('retinoid') || tags.includes('leave-on-serum')
     }).length
-    if (leaveOnActives > 1) {
+    const sanctionedTnShare =
+      unlocks.establishedTnUnlock === true &&
+      leaveOnActives === 2 &&
+      tagPresent('retinoid') &&
+      tagPresent('leave-on-serum') &&
+      !tagPresent('bha')
+    if (leaveOnActives > 1 && !sanctionedTnShare) {
       violations.push('More than one leave-on active in one PM')
     }
   }
 
   // Rule 2 — forbidden same-night pairings.
-  const tagPresent = (tag: string) => steps.some((s) => tagsOf(s, products).includes(tag))
   const pairs: Array<[string, string, string]> = [
     ['bha', 'retinoid', 'BHA and adapalene must never share a night'],
     ['bha', 'benzoyl-peroxide', 'BHA and Benzac must never share a night'],
@@ -115,9 +134,32 @@ export function validateRoutineSafety(
     if (tagPresent(a) && tagPresent(b)) violations.push(message)
   }
 
-  // Rule 9 — patches go on clean, bare, dry skin before all products,
-  // EXCEPT the COSRX pillow barrier, which goes over settled Pair as the final step.
-  const firstProductIndex = steps.findIndex((s) => s.kind === 'product')
+  // Rule 5 — clay and sheet-mask nights are simple nights: no other strong active.
+  // Sole exception: VC100 sharing an adapalene night under the 5.8 unlock.
+  for (const maskTag of ['clay-mask', 'sheet-mask'] as const) {
+    if (!tagPresent(maskTag)) continue
+    const strongActives = steps.filter((s) => {
+      const tags = tagsOf(s, products)
+      if (tags.includes(maskTag)) return false
+      return tags.includes('bha') || tags.includes('retinoid') || tags.includes('leave-on-serum')
+    })
+    const sanctionedVc100Share =
+      unlocks.establishedVc100Unlock === true &&
+      maskTag === 'sheet-mask' &&
+      strongActives.every((s) => tagsOf(s, products).includes('retinoid'))
+    if (strongActives.length > 0 && !sanctionedVc100Share) {
+      violations.push('Mask nights are simple nights — no other strong active')
+    }
+  }
+
+  // Rule 9 — patches go on clean, bare, dry skin before all leave-on products
+  // (cleansing first is fine), EXCEPT the COSRX pillow barrier, which goes
+  // over settled Pair as the final step.
+  const firstLeaveOnIndex = steps.findIndex((s) => {
+    if (s.kind !== 'product' || s.productId === null) return false
+    const product = products.find((p) => p.id === s.productId)
+    return product !== undefined && product.category !== 'cleanser'
+  })
   steps.forEach((step, i) => {
     if (step.kind !== 'patch') return
     if (step.productId === 'cosrx-master-patch') {
@@ -126,8 +168,8 @@ export function validateRoutineSafety(
       }
       return
     }
-    if (firstProductIndex !== -1 && i > firstProductIndex) {
-      violations.push('Patches must be applied to bare, dry skin before all products')
+    if (firstLeaveOnIndex !== -1 && i > firstLeaveOnIndex) {
+      violations.push('Patches must be applied to bare, dry skin before all leave-on products')
     }
   })
 

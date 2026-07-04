@@ -299,6 +299,8 @@ export interface ResolvedRoutine {
   steps: RoutineStep[]
   /** Non-step contextual lines (purge-window label, UV emphasis, moisturiser suggestion). */
   advisories: string[]
+  /** Ids of tracked spots Pair is applied to this session (drives the Pair-night counter). */
+  pairSpotIds: string[]
 }
 
 // ── Engine input ────────────────────────────────────────────────────────────

@@ -292,6 +292,10 @@ export interface EngineResult {
   conflicts: ConflictSet[]
   /** The resolved routine; null while unresolved conflicts remain. */
   routine: ResolvedRoutine | null
+  /** Effects of chosen conflict options plus automatic ones (e.g. Benzac auto-termination) — the caller persists these. */
+  appliedEffects: ConflictEffect[]
+  /** Spot list after folding in tonight's answers — the caller persists this on log. */
+  updatedSpots: Spot[]
 }
 
 export interface ResolvedRoutine {

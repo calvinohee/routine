@@ -165,3 +165,28 @@ describe('shouldEndBenzacMode', () => {
     expect(shouldEndBenzacMode(mode, [spot()], history, TODAY)).toBe(false)
   })
 })
+
+describe('coverage of remaining paths', () => {
+  test('AM answers can create spots but carry no status updates', () => {
+    const answers = { slot: 'am' as const, dayType: 'office' as const, skinStates: [], newSpots: [{ zone: 'nose' as const, type: 'spot' as const }], patches: 'none' as const }
+    const result = applySpotAnswers([], answers, TODAY)
+    expect(result).toHaveLength(1)
+    expect(result[0]?.updates).toEqual([])
+  })
+
+  test('Benzac mode ends when its target spot no longer exists', () => {
+    const mode = { startedDate: '2026-06-29', spotId: 'gone' }
+    expect(shouldEndBenzacMode(mode, [], [], TODAY)).toBe(true)
+  })
+
+  test('update for an unknown spot id is ignored', () => {
+    const answers = pmAnswers({ spotUpdates: [{ spotId: 'nope', status: 'better' }] })
+    expect(applySpotAnswers([], answers, TODAY)).toEqual([])
+  })
+
+  test('a first better update does not heal yet', () => {
+    const s = spot()
+    const answers = pmAnswers({ spotUpdates: [{ spotId: s.id, status: 'better' }] })
+    expect(applySpotAnswers([s], answers, TODAY)[0]?.state).toBe('active')
+  })
+})

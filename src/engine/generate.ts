@@ -68,33 +68,16 @@ export function generateRoutine(input: EngineInput): EngineResult {
   if (selection.kind === 'conflict') {
     conflicts.push(selection.conflict)
   } else {
-    // Record the effects of any night-type conflict choice that resolved this.
-    const choice = input.conflictChoices.find((c) =>
-      c.conflictId.endsWith(`-${input.date}`),
-    )
-    if (choice) {
-      // Effects live on the emitted card; re-derive them via a dry re-selection
-      // with the choice removed so the option list is available.
-      const dry = selectNightType({
-        date: input.date,
-        settings: input.settings,
-        history: input.history,
-        answers,
-        benzacActive,
-        conflictChoices: input.conflictChoices.filter((c) => c !== choice),
-      })
-      if (dry.kind === 'conflict' && dry.conflict.id === choice.conflictId) {
-        const option = dry.conflict.options.find((o) => o.id === choice.chosenOptionId)
-        for (const effect of option?.effects ?? []) appliedEffects.push(effect)
-      }
-    }
+    // Effects of the conflict choice (if any) that resolved the night type.
+    appliedEffects.push(...selection.effects)
   }
 
   if (conflicts.length > 0) {
     return { conflicts, routine: null, appliedEffects, updatedSpots }
   }
 
-  const nightType = selection.kind === 'night' ? selection.nightType : 'simple'
+  // No conflicts remain, so the selection necessarily resolved to a night.
+  const nightType = (selection as Extract<typeof selection, { kind: 'night' }>).nightType
   const routine = buildSequence({ ...input, nightType, spots: updatedSpots })
   addSharedAdvisories(input, routine.advisories)
   if (answers.adapaleneReport === 'stinging-on-application') {

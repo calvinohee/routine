@@ -5,8 +5,7 @@ const MS_PER_DAY = 86_400_000
 
 /** Parse `YYYY-MM-DD` to a UTC timestamp — immune to local timezone/DST. */
 function toUtc(date: IsoDate): number {
-  const [y, m, d] = date.split('-').map(Number)
-  return Date.UTC(y ?? 0, (m ?? 1) - 1, d ?? 1)
+  return Date.UTC(Number(date.slice(0, 4)), Number(date.slice(5, 7)) - 1, Number(date.slice(8, 10)))
 }
 
 function toIso(utcMs: number): IsoDate {

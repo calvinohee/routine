@@ -88,3 +88,10 @@ describe('exfoliantRetinoidDates', () => {
     expect(exfoliantRetinoidDates(history)).toEqual(['2026-07-01', '2026-07-02'])
   })
 })
+
+describe('lastDateOfNightType — order independence', () => {
+  test('later date first still returns the most recent', () => {
+    const history = [pmSession('2026-07-01', 'bha'), pmSession('2026-06-20', 'bha')]
+    expect(lastDateOfNightType(history, 'bha')).toBe('2026-07-01')
+  })
+})

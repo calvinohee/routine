@@ -274,3 +274,81 @@ describe('cold start (Section 11, exactly)', () => {
     expect(result.routine?.nightType).toBe('bha')
   })
 })
+
+describe('coverage of remaining generate paths', () => {
+  test('the engine refuses to emit a routine if corrupted product data breaks a safety rule', () => {
+    // Corrupt the foaming wash into a second salicylic-acid source.
+    const corrupted = PRODUCTS.map((p) =>
+      p.id === 'curel-foaming-wash' ? { ...p, activeTags: ['salicylic-acid'] } : p,
+    )
+    const c = input({
+      date: SUNDAY,
+      products: corrupted,
+      history: quotasMetHistory().map((s) =>
+        s.nightType === 'bha' ? s : s,
+      ),
+    })
+    // Force a BHA night (two salicylic sources: corrupted wash + BHA).
+    const withBhaDue = {
+      ...c,
+      history: [
+        pmSession('2026-06-29', 'adapalene'),
+        pmSession('2026-07-01', 'tn'),
+        pmSession('2026-07-03', 'tn'),
+      ],
+    }
+    expect(() => generateRoutine(withBhaDue)).toThrow(/unsafe/i)
+  })
+
+  test('an escalation choice with a bogus option id applies no effects', () => {
+    const spot = trackedSpot()
+    const base = input({ spots: [spot], history: fivePairNights(spot.id) })
+    const first = generateRoutine(base)
+    const card = first.conflicts.find((c) => c.id === `escalation-${spot.id}`)
+    const result = generateRoutine({
+      ...base,
+      conflictChoices: [{ conflictId: card?.id ?? '', chosenOptionId: 'nope' }],
+    })
+    expect(result.appliedEffects).toEqual([])
+  })
+
+  test('AM generation inside the purge window carries the label too', () => {
+    const settings = makeSettings({
+      adapalene: {
+        phase: 'full-face-1x',
+        phaseStart: '2026-06-10',
+        lastApplication: '2026-07-01',
+        firstFullFace: '2026-06-10',
+      },
+    })
+    const result = generateRoutine(
+      input({ slot: 'am', settings, answers: amAnswers({ dayType: 'office' }) }),
+    )
+    expect(result.routine?.advisories[0]).toMatch(/purge/i)
+  })
+})
+
+describe('remaining escalation and choice paths', () => {
+  test('boil escalation: choosing the derm flag applies flag-derm without starting Benzac', () => {
+    const boil: Spot = { ...trackedSpot(), type: 'boil' }
+    const base = input({ spots: [boil], history: fivePairNights(boil.id) })
+    const first = generateRoutine(base)
+    const card = first.conflicts.find((c) => c.id === `escalation-${boil.id}`)
+    const derm = card?.options.find((o) => o.id === 'flag-derm')
+    const second = generateRoutine({
+      ...base,
+      conflictChoices: [{ conflictId: card?.id ?? '', chosenOptionId: derm?.id ?? '' }],
+    })
+    expect(second.appliedEffects).toEqual([{ type: 'flag-derm', spotId: boil.id }])
+    expect(second.routine?.nightType).not.toBe('benzac')
+  })
+
+  test('a stale conflict choice from a conflict that no longer arises is ignored', () => {
+    const result = generateRoutine(
+      input({ conflictChoices: [{ conflictId: `stale-${SUNDAY}`, chosenOptionId: 'x' }] }),
+    )
+    expect(result.conflicts).toEqual([])
+    expect(result.routine?.nightType).toBe('simple')
+    expect(result.appliedEffects).toEqual([])
+  })
+})

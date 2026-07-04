@@ -435,3 +435,184 @@ describe('conditional swaps and exclusions', () => {
     }
   })
 })
+
+describe('coverage of remaining sequence paths', () => {
+  test('AM rest-indoors Sunday: weekend Rexona and Moilip notes', () => {
+    const c = ctx({ slot: 'am', nightType: null, date: SUNDAY, answers: amAnswers({ dayType: 'rest-indoors' }) })
+    const notes = buildSequence(c).advisories.join(' ')
+    expect(notes).toMatch(/Rexona/)
+    expect(notes).toMatch(/Moilip/)
+  })
+
+  test('AM outdoor with an AM run planned', () => {
+    const c = ctx({ slot: 'am', nightType: null, answers: amAnswers({ dayType: 'outdoor', runTiming: 'run-am' }) })
+    expect(buildSequence(c).advisories.join(' ')).toMatch(/before the run/i)
+  })
+
+  test('AM outdoor with a PM run planned', () => {
+    const c = ctx({ slot: 'am', nightType: null, answers: amAnswers({ dayType: 'outdoor', runTiming: 'run-pm' }) })
+    expect(buildSequence(c).advisories.join(' ')).toMatch(/after the run/i)
+  })
+
+  test('AM healing-spot patches also get the VT patch', () => {
+    const c = ctx({ slot: 'am', nightType: null, answers: amAnswers({ dayType: 'office', patches: 'healing-spot' }) })
+    expect(ids(buildSequence(c))[0]).toBe('vt-pro-cica-patch')
+  })
+
+  test('AM closed-lump answer gets a tonight-advisory, no daytime patch', () => {
+    const c = ctx({ slot: 'am', nightType: null, answers: amAnswers({ dayType: 'office', patches: 'closed-lump' }) })
+    const routine = buildSequence(c)
+    expect(ids(routine)).not.toContain('cosrx-master-patch')
+    expect(routine.advisories.join(' ')).toMatch(/pillow barrier tonight/i)
+  })
+
+  test('AM wfh with dry cheeks includes Shirojyun and Snail', () => {
+    const c = ctx({ slot: 'am', nightType: null, answers: amAnswers({ dayType: 'wfh', skinStates: ['dry-tight-cheeks'] }) })
+    const list = ids(buildSequence(c))
+    expect(list).toContain('shirojyun-premium')
+    expect(list).toContain('cosrx-snail-92')
+  })
+
+  test('PM healing-spot patches get the VT patch after cleansing', () => {
+    const c = ctx({ date: SUNDAY, answers: pmAnswers({ patches: 'healing-spot' }) })
+    expect(ids(buildSequence(c))).toContain('vt-pro-cica-patch')
+  })
+
+  test('benzac night with nothing worn: no oil cleanse, Benzac is the only cleanse', () => {
+    const c = ctx({ date: SUNDAY, nightType: 'benzac' })
+    const list = ids(buildSequence(c))
+    expect(list[0]).toBe('benzac-wash-5')
+    expect(list).not.toContain('curel-cleansing-oil')
+  })
+
+  test('benzac night: open spots get no Pair (closed lumps only)', () => {
+    const c = ctx({
+      nightType: 'benzac',
+      history: [amOfficeSession(MONDAY)],
+      spots: [activeSpot({ type: 'spot' })],
+    })
+    const routine = buildSequence(c)
+    expect(ids(routine)).not.toContain('pair-acne-cream-w')
+    expect(routine.pairSpotIds).toEqual([])
+  })
+
+  test('clay night, clear skin, Innisfree disabled → LRP fallback', () => {
+    const products = PRODUCTS.map((p) =>
+      p.id === 'innisfree-volcanic-clay' ? { ...p, enabled: false } : p,
+    )
+    const c = ctx({ date: SUNDAY, nightType: 'clay', products })
+    expect(ids(buildSequence(c))).toContain('lrp-effaclar-clay')
+  })
+
+  test('established + VC100 unlock (TN met) → sheet mask shares the adapalene night', () => {
+    const settings = makeSettings({
+      adapalene: {
+        phase: 'established',
+        phaseStart: '2026-06-01',
+        lastApplication: '2026-07-03',
+        firstFullFace: '2026-04-01',
+      },
+      establishedUnlocks: { tnOnAdapaleneNights: false, vc100OnAdapaleneNights: true },
+    })
+    const c = ctx({ date: SUNDAY, nightType: 'adapalene', settings })
+    const routine = buildSequence(c)
+    const list = ids(routine)
+    expect(list).toContain('vc100-sheet-mask')
+    expect(list).toContain('shirojyun-premium')
+    expect(list.indexOf('differin-adapalene')).toBeGreaterThan(list.indexOf('vc100-sheet-mask'))
+    expectSafe(c, routine)
+  })
+
+  test('established with both unlocks and both behind → TN wins, no sheet mask', () => {
+    const settings = makeSettings({
+      adapalene: {
+        phase: 'established',
+        phaseStart: '2026-06-01',
+        lastApplication: '2026-07-03',
+        firstFullFace: '2026-04-01',
+      },
+      establishedUnlocks: { tnOnAdapaleneNights: true, vc100OnAdapaleneNights: true },
+    })
+    const c = ctx({ date: SUNDAY, nightType: 'adapalene', settings })
+    const list = ids(buildSequence(c))
+    expect(list).toContain('cosdebaha-tn')
+    expect(list).not.toContain('vc100-sheet-mask')
+  })
+
+  test('PM after a logged AM without SPF (wfh) → single cleanse', () => {
+    const wfhAm = amSession(MONDAY, {
+      answers: amAnswers({ dayType: 'wfh' }),
+      steps: [
+        { kind: 'product', productId: 'pc-skin-balancing-toner', title: '', purpose: '', technique: '', waitMinutes: 1 },
+      ],
+    })
+    const c = ctx({ history: [wfhAm] })
+    expect(ids(buildSequence(c))[0]).toBe('curel-foaming-wash')
+  })
+
+  test('CC cream logged in the AM triggers the double cleanse even without SPF', () => {
+    const ccAm = amSession(MONDAY, {
+      answers: amAnswers({ dayType: 'wfh' }),
+      steps: [
+        { kind: 'product', productId: 'it-cosmetics-cc', title: '', purpose: '', technique: '', waitMinutes: 0 },
+      ],
+    })
+    const c = ctx({ history: [ccAm] })
+    expect(ids(buildSequence(c)).slice(0, 2)).toEqual(['curel-cleansing-oil', 'curel-foaming-wash'])
+  })
+
+  test('PM cool/dry weather advisory', () => {
+    const cold = { tempC: 10, humidityPct: 35, uvIndex: 1, conditions: 'Clear', fetchedAt: '2026-07-05T19:00:00+10:00' }
+    const c = ctx({ date: SUNDAY, weather: cold })
+    expect(buildSequence(c).advisories.join(' ')).toMatch(/Curél/)
+  })
+
+  test('PM dry-tight cheeks advisory on a normal night', () => {
+    const c = ctx({ date: SUNDAY, answers: pmAnswers({ skinStates: ['dry-tight-cheeks'] }) })
+    expect(buildSequence(c).advisories.join(' ')).toMatch(/cheeks only/i)
+  })
+
+  test('plain-office tomorrow → Certain Dri night-before note', () => {
+    const settings = makeSettings({
+      weeklySchedule: {
+        monday: 'office',
+        tuesday: 'office',
+        wednesday: 'office',
+        thursday: 'office',
+        friday: 'office',
+        saturday: 'outdoor-run-day',
+        sunday: 'rest-indoors',
+      },
+    })
+    const c = ctx({ date: SUNDAY, settings }) // tomorrow Monday = office
+    expect(buildSequence(c).advisories.join(' ')).toMatch(/Certain Dri.*tonight/i)
+  })
+})
+
+describe('AM cool/dry weather', () => {
+  test('AM cold snap → Tuner-skip reminder', () => {
+    const cold = { tempC: 9, humidityPct: 35, uvIndex: 1, conditions: 'Clear', fetchedAt: '2026-07-06T07:00:00+10:00' }
+    const c = ctx({ slot: 'am', nightType: null, answers: amAnswers({ dayType: 'office' }), weather: cold })
+    expect(buildSequence(c).advisories.join(' ')).toMatch(/Tuner/)
+  })
+})
+
+describe('final coverage paths', () => {
+  test('a disabled product suppresses its advisory (Braun disabled → no shave note)', () => {
+    const products = PRODUCTS.map((p) => (p.id === 'braun-series-7' ? { ...p, enabled: false } : p))
+    const c = ctx({ slot: 'am', nightType: null, products, answers: amAnswers({ dayType: 'office' }) })
+    expect(buildSequence(c).advisories.join(' ')).not.toMatch(/Shave/)
+  })
+
+  test('PM with a null night type falls back to a simple night', () => {
+    const c = ctx({ date: SUNDAY, nightType: null })
+    expect(buildSequence(c).nightType).toBe('simple')
+  })
+})
+
+describe('clay choice driven by tracked spots', () => {
+  test('an active tracked spot makes the week reactive → LRP even with clear skin states', () => {
+    const c = ctx({ date: SUNDAY, nightType: 'clay', spots: [activeSpot()] })
+    expect(ids(buildSequence(c))).toContain('lrp-effaclar-clay')
+  })
+})

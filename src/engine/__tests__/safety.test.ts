@@ -261,3 +261,35 @@ describe('validateRoutineSafety — refinements', () => {
     ).toEqual([])
   })
 })
+
+describe('coverage of remaining validator paths', () => {
+  test('COSRX pillow barrier anywhere but last is a violation', () => {
+    const steps = [patchStep('cosrx-master-patch'), productStep('pc-skin-balancing-toner')]
+    expect(validateRoutineSafety(steps, PRODUCTS, 'pm').length).toBeGreaterThan(0)
+  })
+
+  test('a patch-only routine is fine (no leave-on products at all)', () => {
+    expect(validateRoutineSafety([patchStep('vt-pro-cica-patch')], PRODUCTS, 'pm')).toEqual([])
+  })
+
+  test('vc100 unlock does not sanction TN sharing a sheet-mask night', () => {
+    const steps = [productStep('vc100-sheet-mask'), productStep('cosdebaha-tn')]
+    expect(
+      validateRoutineSafety(steps, PRODUCTS, 'pm', { establishedVc100Unlock: true }).length,
+    ).toBeGreaterThan(0)
+  })
+
+  test('vc100 unlock does not sanction actives on a clay night', () => {
+    const steps = [productStep('lrp-effaclar-clay'), productStep('cosdebaha-tn')]
+    expect(
+      validateRoutineSafety(steps, PRODUCTS, 'pm', { establishedVc100Unlock: true }).length,
+    ).toBeGreaterThan(0)
+  })
+
+  test('tn unlock does not sanction BHA + TN', () => {
+    const steps = [productStep('pc-bha'), productStep('cosdebaha-tn')]
+    expect(
+      validateRoutineSafety(steps, PRODUCTS, 'pm', { establishedTnUnlock: true }).length,
+    ).toBeGreaterThan(0)
+  })
+})

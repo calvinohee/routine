@@ -32,20 +32,20 @@ function ctx(overrides: Partial<NightSelectionContext> = {}): NightSelectionCont
 describe('priority 1 — Benzac mode', () => {
   test('benzac wins over everything while active', () => {
     const c = ctx({ date: SATURDAY, benzacActive: true }) // also a vc100 mask day
-    expect(selectNightType(c)).toEqual({ kind: 'night', nightType: 'benzac' })
+    expect(selectNightType(c)).toEqual({ kind: 'night', nightType: 'benzac', effects: [] })
   })
 })
 
 describe('priority 2 — pre-assigned mask days', () => {
   test('Saturday resolves to vc100', () => {
     const c = ctx({ date: SATURDAY })
-    expect(selectNightType(c)).toEqual({ kind: 'night', nightType: 'vc100' })
+    expect(selectNightType(c)).toEqual({ kind: 'night', nightType: 'vc100', effects: [] })
   })
 
   test('Thursday resolves to clay', () => {
     // 2026-07-09 is a Thursday; adapalene met inside that window.
     const c = ctx({ date: '2026-07-09', history: [pmSession('2026-07-06', 'adapalene')] })
-    expect(selectNightType(c)).toEqual({ kind: 'night', nightType: 'clay' })
+    expect(selectNightType(c)).toEqual({ kind: 'night', nightType: 'clay', effects: [] })
   })
 
   test('mask day + irritated skin emits a conflict card (keep vs swap-and-reschedule)', () => {
@@ -70,7 +70,7 @@ describe('priority 2 — pre-assigned mask days', () => {
       ...c,
       conflictChoices: [{ conflictId: first.conflict.id, chosenOptionId: chosen?.id ?? '' }],
     })
-    expect(resolved).toEqual({ kind: 'night', nightType: 'vc100' })
+    expect(resolved).toEqual({ kind: 'night', nightType: 'vc100', effects: [] })
   })
 
   test('true-breakout also triggers the mask-day conflict', () => {
@@ -82,13 +82,13 @@ describe('priority 2 — pre-assigned mask days', () => {
 describe('priority 3 — adapalene', () => {
   test('adapalene due → adapalene night', () => {
     const c = ctx({ settings: adapaleneDue, history: [] })
-    expect(selectNightType(c)).toEqual({ kind: 'night', nightType: 'adapalene' })
+    expect(selectNightType(c)).toEqual({ kind: 'night', nightType: 'adapalene', effects: [] })
   })
 
   test('adapalene beats BHA when both are due (top active priority — no card)', () => {
     // BHA count 0 (behind quota), adapalene due → ladder resolves silently.
     const c = ctx({ settings: adapaleneDue, history: [] })
-    expect(selectNightType(c)).toEqual({ kind: 'night', nightType: 'adapalene' })
+    expect(selectNightType(c)).toEqual({ kind: 'night', nightType: 'adapalene', effects: [] })
   })
 
   test('adapalene due + irritated skin → conflict card, skip recommended', () => {
@@ -136,7 +136,7 @@ describe('priority 4 — BHA', () => {
       pmSession('2026-06-30', 'tn'),
       pmSession('2026-07-02', 'tn'),
     ]
-    expect(selectNightType(ctx({ history }))).toEqual({ kind: 'night', nightType: 'bha' })
+    expect(selectNightType(ctx({ history }))).toEqual({ kind: 'night', nightType: 'bha', effects: [] })
   })
 
   test('BHA and TN both behind → conflict card, BHA recommended', () => {
@@ -155,7 +155,7 @@ describe('priority 4 — BHA', () => {
       pmSession('2026-06-30', 'tn'),
       pmSession('2026-07-02', 'tn'),
     ]
-    expect(selectNightType(ctx({ history }))).toEqual({ kind: 'night', nightType: 'simple' })
+    expect(selectNightType(ctx({ history }))).toEqual({ kind: 'night', nightType: 'simple', effects: [] })
   })
 
   test('BHA blocked by spacing while TN behind → conflict (TN tonight vs simple)', () => {
@@ -173,7 +173,7 @@ describe('priority 4 — BHA', () => {
       pmSession('2026-07-02', 'tn'),
     ]
     const c = ctx({ history, answers: pmAnswers({ skinStates: ['irritated'] }) })
-    expect(selectNightType(c)).toEqual({ kind: 'night', nightType: 'simple' })
+    expect(selectNightType(c)).toEqual({ kind: 'night', nightType: 'simple', effects: [] })
   })
 })
 
@@ -187,7 +187,7 @@ describe('priorities 5–6 — TN, then simple', () => {
       pmSession('2026-07-02', 'tn'),
       pmSession('2026-07-04', 'tn'),
     ]
-    expect(selectNightType(ctx({ history }))).toEqual({ kind: 'night', nightType: 'simple' })
+    expect(selectNightType(ctx({ history }))).toEqual({ kind: 'night', nightType: 'simple', effects: [] })
   })
 
   test('only TN behind → tn (TN has no consecutive-night constraint)', () => {
@@ -197,6 +197,33 @@ describe('priorities 5–6 — TN, then simple', () => {
       pmSession('2026-07-03', 'bha'),
       pmSession('2026-07-05', 'bha'),
     ]
-    expect(selectNightType(ctx({ history }))).toEqual({ kind: 'night', nightType: 'tn' })
+    expect(selectNightType(ctx({ history }))).toEqual({ kind: 'night', nightType: 'tn', effects: [] })
+  })
+})
+
+describe('coverage of remaining paths', () => {
+  test('a choice referencing a nonexistent option re-emits the conflict', () => {
+    const c = ctx({ date: SATURDAY, answers: pmAnswers({ skinStates: ['irritated'] }) })
+    const first = selectNightType(c)
+    if (first.kind !== 'conflict') throw new Error('expected conflict')
+    const again = selectNightType({
+      ...c,
+      conflictChoices: [{ conflictId: first.conflict.id, chosenOptionId: 'not-an-option' }],
+    })
+    expect(again.kind).toBe('conflict')
+  })
+
+  test('clay mask day + irritation words the card for clay', () => {
+    // 2026-07-09 is a Thursday (clay day).
+    const c = ctx({
+      date: '2026-07-09',
+      history: [pmSession('2026-07-06', 'adapalene')],
+      answers: pmAnswers({ skinStates: ['irritated'] }),
+    })
+    const result = selectNightType(c)
+    if (result.kind !== 'conflict') throw new Error('expected conflict')
+    expect(result.conflict.reason).toContain('clay')
+    const swap = result.conflict.options.find((o) => o.nightType === 'simple')
+    expect(swap?.effects).toEqual([{ type: 'reschedule-mask', mask: 'clay' }])
   })
 })

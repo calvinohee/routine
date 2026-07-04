@@ -7,6 +7,7 @@
  */
 import type {
   ConflictChoiceLog,
+  ConflictEffect,
   ConflictSet,
   IsoDate,
   NightType,
@@ -31,14 +32,18 @@ export interface NightSelectionContext {
 }
 
 export type NightSelection =
-  | { kind: 'night'; nightType: NightType }
+  | { kind: 'night'; nightType: NightType; effects: ConflictEffect[] }
   | { kind: 'conflict'; conflict: ConflictSet }
+
+function night(nightType: NightType, effects: ConflictEffect[] = []): NightSelection {
+  return { kind: 'night', nightType, effects }
+}
 
 function resolveOrEmit(ctx: NightSelectionContext, conflict: ConflictSet): NightSelection {
   const choice = ctx.conflictChoices.find((c) => c.conflictId === conflict.id)
   if (choice) {
     const option = conflict.options.find((o) => o.id === choice.chosenOptionId)
-    if (option) return { kind: 'night', nightType: option.nightType }
+    if (option) return night(option.nightType, option.effects)
   }
   return { kind: 'conflict', conflict }
 }
@@ -50,7 +55,7 @@ export function selectNightType(ctx: NightSelectionContext): NightSelection {
   const counts = quotaCounts(history, date)
 
   // 1 — Benzac mode.
-  if (ctx.benzacActive) return { kind: 'night', nightType: 'benzac' }
+  if (ctx.benzacActive) return night('benzac')
 
   // 2 — Pre-assigned mask day.
   const weekday = weekdayOf(date)
@@ -84,7 +89,7 @@ export function selectNightType(ctx: NightSelectionContext): NightSelection {
         recommendedOptionId: 'swap-simple',
       })
     }
-    return { kind: 'night', nightType: mask }
+    return night(mask)
   }
 
   // 3 — Adapalene (top active priority). Hard rule: never a 3rd consecutive
@@ -116,11 +121,11 @@ export function selectNightType(ctx: NightSelectionContext): NightSelection {
         recommendedOptionId: 'skip-adapalene',
       })
     }
-    return { kind: 'night', nightType: 'adapalene' }
+    return night('adapalene')
   }
 
   // Irritated skin biases everything below toward simple.
-  if (irritated) return { kind: 'night', nightType: 'simple' }
+  if (irritated) return night('simple')
 
   const bhaBehind = counts.bha < settings.quotas.bha
   const tnBehind = counts.tn < settings.quotas.tn
@@ -153,7 +158,7 @@ export function selectNightType(ctx: NightSelectionContext): NightSelection {
         recommendedOptionId: 'choose-bha',
       })
     }
-    return { kind: 'night', nightType: 'bha' }
+    return night('bha')
   }
 
   // Quota pressure vs spacing: BHA is behind but spacing blocks it tonight.
@@ -182,8 +187,8 @@ export function selectNightType(ctx: NightSelectionContext): NightSelection {
   }
 
   // 5 — TN.
-  if (tnBehind) return { kind: 'night', nightType: 'tn' }
+  if (tnBehind) return night('tn')
 
   // 6 — Simple.
-  return { kind: 'night', nightType: 'simple' }
+  return night('simple')
 }

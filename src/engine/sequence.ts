@@ -78,6 +78,11 @@ class RoutineBuilder {
   advise(line: string): void {
     this.advisories.push(line)
   }
+
+  /** Advisory mentioning a product — suppressed when that product is disabled. */
+  adviseIf(id: string, line: string): void {
+    if (this.enabled(id)) this.advisories.push(line)
+  }
 }
 
 const OFFICE_LIKE: DayType[] = ['office', 'gym-office', 'outdoor']
@@ -87,12 +92,17 @@ function scheduleDayType(settings: Settings, date: IsoDate): DayType {
   return scheduled === 'outdoor-run-day' ? 'outdoor' : scheduled
 }
 
-/** The day type in effect today (PM looks at the logged AM, then the schedule). */
+function todaysAm(ctx: SequenceContext): Session | undefined {
+  return ctx.history.find((s) => s.date === ctx.date && s.answers.slot === 'am')
+}
+
+/** The day type in effect today (PM only — looks at the logged AM, then the schedule). */
 function effectiveDayType(ctx: SequenceContext): DayType {
-  if (ctx.answers.slot === 'am') return ctx.answers.dayType
-  const am = ctx.history.find((s) => s.date === ctx.date && s.slot === 'am')
-  if (am && am.answers.slot === 'am') return am.answers.dayType
-  return scheduleDayType(ctx.settings, ctx.date)
+  const am = todaysAm(ctx)
+  // todaysAm only matches sessions whose answers are AM answers.
+  return am !== undefined
+    ? (am.answers as AmAnswers).dayType
+    : scheduleDayType(ctx.settings, ctx.date)
 }
 
 /** What went on the face today — drives the double-cleanse rule. */
@@ -100,17 +110,20 @@ function wornToday(ctx: SequenceContext, answers: PmAnswers): { spf: boolean; cc
   if (answers.followedAm === 'skipped') return { spf: false, cc: false, wax: false }
   const dayType = effectiveDayType(ctx)
   const waxDay = dayType === 'office' || dayType === 'gym-office'
-  const am = ctx.history.find((s) => s.date === ctx.date && s.slot === 'am')
-  if (am) {
-    const stepIds = am.steps.map((s) => s.productId)
-    const spf = am.steps.some((s) => {
-      const p = ctx.products.find((x) => x.id === s.productId)
-      return p?.activeTags.includes('spf') === true
-    })
-    return { spf, cc: stepIds.includes('it-cosmetics-cc'), wax: waxDay }
+  const am = todaysAm(ctx)
+  if (am === undefined) {
+    // No AM logged — assume the scheduled day type's defaults were worn.
+    return { spf: OFFICE_LIKE.includes(dayType), cc: false, wax: waxDay }
   }
-  // No AM logged — assume the scheduled day type's defaults were worn.
-  return { spf: OFFICE_LIKE.includes(dayType), cc: false, wax: waxDay }
+  const spfIds = new Set(
+    ctx.products.filter((p) => p.activeTags.includes('spf')).map((p) => p.id),
+  )
+  const stepIds = am.steps.map((s) => s.productId)
+  return {
+    spf: stepIds.some((id) => id !== null && spfIds.has(id)),
+    cc: stepIds.includes('it-cosmetics-cc'),
+    wax: waxDay,
+  }
 }
 
 function weatherAdvisories(b: RoutineBuilder, mods: WeatherModifiers, slot: 'am' | 'pm'): void {
@@ -182,35 +195,30 @@ function buildAm(ctx: SequenceContext, answers: AmAnswers): ResolvedRoutine {
 
   // Trailing contextual notes — day-type driven, not skincare steps.
   if (dayType === 'office' || dayType === 'gym-office' || dayType === 'outdoor') {
-    if (b.enabled('braun-series-7'))
-      b.advise('Shave first (Braun) on clean dry skin, before any skincare.')
+    b.adviseIf('braun-series-7', 'Shave first (Braun) on clean dry skin, before any skincare.')
   }
   if (dayType === 'gym-office') {
-    if (b.enabled('cerave-sa-cleanser'))
-      b.advise('Gym: CeraVe SA cleanser in the gym shower (1–2 pumps, wet skin, rinse).')
-    if (b.enabled('sukin-shampoo'))
-      b.advise('Hair: Sukin shampoo with the Muji scrubber, then Himawari conditioner.')
-    if (b.enabled('certain-dri-extra'))
-      b.advise('Certain Dri after the post-gym shower, before leaving.')
+    b.adviseIf('cerave-sa-cleanser', 'Gym: CeraVe SA cleanser in the gym shower (1–2 pumps, wet skin, rinse).')
+    b.adviseIf('sukin-shampoo', 'Hair: Sukin shampoo with the Muji scrubber, then Himawari conditioner.')
+    b.adviseIf('certain-dri-extra', 'Certain Dri after the post-gym shower, before leaving.')
   }
   if (dayType === 'office' || dayType === 'gym-office') {
-    if (b.enabled('uevo-wax')) b.advise('Style: Uevo wax on dry hair after blowdry (medium heat only).')
-    if (b.enabled('issey-fragrance'))
-      b.advise('Fragrance last: pulse points only — never on the face or SPF-covered neck.')
+    b.adviseIf('uevo-wax', 'Style: Uevo wax on dry hair after blowdry (medium heat only).')
+    b.adviseIf('issey-fragrance', 'Fragrance last: pulse points only — never on the face or SPF-covered neck.')
   }
   if (dayType === 'outdoor') {
-    if (b.enabled('rohto-melty-lip')) b.advise('Lips: Rohto Melty lip SPF before leaving; reapply outdoors.')
+    b.adviseIf('rohto-melty-lip', 'Lips: Rohto Melty lip SPF before leaving; reapply outdoors.')
     if (answers.runTiming === 'run-am')
       b.advise('AM run: SPF goes on before the run; cleanse and redo skincare after.')
     if (answers.runTiming === 'run-pm')
       b.advise('PM run planned: do tonight’s routine after the run.')
   }
   const weekday = weekdayOf(ctx.date)
-  if ((weekday === 'saturday' || weekday === 'sunday' || dayType === 'gym-office') && b.enabled('rexona-advanced')) {
-    b.advise('Deodorant: Rexona roll-on this morning.')
+  if (weekday === 'saturday' || weekday === 'sunday' || dayType === 'gym-office') {
+    b.adviseIf('rexona-advanced', 'Deodorant: Rexona roll-on this morning.')
   }
-  if ((dayType === 'wfh' || dayType === 'rest-indoors') && b.enabled('moilip')) {
-    b.advise('Lips: Moilip as needed (home default).')
+  if (dayType === 'wfh' || dayType === 'rest-indoors') {
+    b.adviseIf('moilip', 'Lips: Moilip as needed (home default).')
   }
 
   return { nightType: null, steps: b.steps, advisories: b.advisories, pairSpotIds: [] }
@@ -369,13 +377,11 @@ function buildPm(ctx: SequenceContext, answers: PmAnswers): ResolvedRoutine {
     b.advise('Cheeks tight — Curél Moisture Cream on cheeks only is available; T-zone stays Snail 92.')
   }
   if (dayType === 'office' || dayType === 'gym-office') {
-    if (b.enabled('maro-deo-shampoo'))
-      b.advise('Wax day: Maro Deo shampoo (Muji scrubber) then Maro treatment on scalp and hair.')
+    b.adviseIf('maro-deo-shampoo', 'Wax day: Maro Deo shampoo (Muji scrubber) then Maro treatment on scalp and hair.')
   }
-  const tomorrow = scheduleDayType(ctx.settings, addDays(ctx.date, 1))
   const tomorrowScheduled = ctx.settings.weeklySchedule[weekdayOf(addDays(ctx.date, 1))]
-  if (tomorrow === 'office' && tomorrowScheduled === 'office' && b.enabled('certain-dri-extra')) {
-    b.advise('Office tomorrow (no gym): Certain Dri goes on tonight before bed.')
+  if (tomorrowScheduled === 'office') {
+    b.adviseIf('certain-dri-extra', 'Office tomorrow (no gym): Certain Dri goes on tonight before bed.')
   }
 
   return {

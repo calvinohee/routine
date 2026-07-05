@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QuestionnaireSheet } from '../QuestionnaireSheet'
 import { ConflictCards } from '../ConflictCards'
+import { CountdownTimer } from '../CountdownTimer'
 import { makeSettings } from '../../engine/__tests__/fixtures'
 import type { Answers, ConflictSet } from '../../engine/types'
 
@@ -158,5 +159,44 @@ describe('ConflictCards', () => {
 
     await user.click(screen.getByText('TN night'))
     expect(onChoose).toHaveBeenCalledWith('choose-tn')
+  })
+})
+
+describe('CountdownTimer persistence', () => {
+  test('idle by default', () => {
+    localStorage.clear()
+    render(<CountdownTimer minutes={10} />)
+    expect(screen.getByRole('button', { name: /Start 10:00 timer/ })).toBeInTheDocument()
+  })
+
+  test('resumes a running timer from storage (survives unmount/remount)', () => {
+    localStorage.setItem('regimen-wait-timer', String(Date.now() + 5 * 60 * 1000))
+    render(<CountdownTimer minutes={10} />)
+    expect(screen.getByText(/^[45]:\d{2}$/)).toBeInTheDocument()
+    localStorage.clear()
+  })
+
+  test('a timer that finished while away shows Done', () => {
+    localStorage.setItem('regimen-wait-timer', String(Date.now() - 60 * 1000))
+    render(<CountdownTimer minutes={10} />)
+    expect(screen.getByText(/Done — next layer/)).toBeInTheDocument()
+    localStorage.clear()
+  })
+
+  test('a long-expired timer resets to idle', () => {
+    localStorage.setItem('regimen-wait-timer', String(Date.now() - 2 * 60 * 60 * 1000))
+    render(<CountdownTimer minutes={10} />)
+    expect(screen.getByRole('button', { name: /Start 10:00 timer/ })).toBeInTheDocument()
+    localStorage.clear()
+  })
+
+  test('tapping start persists the end time', async () => {
+    localStorage.clear()
+    const user = userEvent.setup()
+    render(<CountdownTimer minutes={10} />)
+    await user.click(screen.getByRole('button', { name: /Start 10:00 timer/ }))
+    const stored = Number(localStorage.getItem('regimen-wait-timer'))
+    expect(stored).toBeGreaterThan(Date.now() + 9 * 60 * 1000)
+    localStorage.clear()
   })
 })

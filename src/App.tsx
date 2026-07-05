@@ -24,10 +24,19 @@ export default function App() {
 
   return (
     <>
+      {/* Opaque cover for the iOS status-bar area (light + dark aware). */}
+      <div className="top-safe" aria-hidden="true" />
       <main className="app-main">
-        {tab === 'today' && <TodayScreen />}
-        {tab === 'history' && <HistoryScreen />}
-        {tab === 'library' && <LibraryScreen />}
+        {/* All tabs stay mounted so in-flight state (e.g. the BHA timer) survives switching. */}
+        <div hidden={tab !== 'today'}>
+          <TodayScreen />
+        </div>
+        <div hidden={tab !== 'history'}>
+          <HistoryScreen />
+        </div>
+        <div hidden={tab !== 'library'}>
+          <LibraryScreen />
+        </div>
       </main>
       <TabBar tab={tab} onChange={setTab} />
     </>

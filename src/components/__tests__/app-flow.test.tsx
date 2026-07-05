@@ -63,3 +63,25 @@ describe('full app flow', () => {
     expect(await screen.findByRole('heading', { name: 'Library' })).toBeInTheDocument()
   })
 })
+
+describe('tab switching preserves in-flight state', () => {
+  test('a generated, unlogged routine survives visiting another tab', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await screen.findByRole('heading', { name: 'Today' })
+    await user.click(screen.getByRole('button', { name: /Start (morning|evening) check-in/ }))
+    await screen.findByRole('heading', { name: /check-in/i })
+    await user.click(screen.getByRole('button', { name: 'Build my routine' }))
+    await waitFor(async () => {
+      const log = screen.queryByRole('button', { name: 'Log it' })
+      if (log) return
+      const option = document.querySelector('.conflict-option')
+      if (option) (option as HTMLElement).click()
+      expect(screen.getByRole('button', { name: 'Log it' })).toBeInTheDocument()
+    })
+
+    await user.click(screen.getByRole('button', { name: 'History' }))
+    await user.click(screen.getByRole('button', { name: 'Today' }))
+    expect(screen.getByRole('button', { name: 'Log it' })).toBeInTheDocument()
+  })
+})

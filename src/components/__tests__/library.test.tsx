@@ -40,11 +40,20 @@ describe('LibraryScreen — products', () => {
     })
   })
 
+  test('rows show a one-line function brief, not a status label', async () => {
+    render(<LibraryScreen />)
+    await screen.findByRole('heading', { name: 'Library' })
+    // Differin's brief appears under its name; no uppercase status labels anywhere.
+    expect(screen.getByText(/Adapalene retinoid — cell turnover/)).toBeInTheDocument()
+    expect(document.querySelector('.product-status')).toBeNull()
+  })
+
   test('tapping a product opens its detail sheet', async () => {
     const user = userEvent.setup()
     render(<LibraryScreen />)
     await user.click(await screen.findByText("Paula's Choice 2% BHA Liquid Exfoliant"))
-    expect(await screen.findByText(/Gold-standard OTC/)).toBeInTheDocument()
+    expect(await screen.findByText(/thin layer full face/)).toBeInTheDocument()
+    expect(screen.getByText(/5–10 min wait is non-negotiable/)).toBeInTheDocument()
   })
 })
 

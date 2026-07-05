@@ -23,7 +23,7 @@ export function ProductRow({ product, onOpen }: { product: Product; onOpen: () =
     <div className="product-row">
       <button className="product-main" onClick={onOpen}>
         <span className="product-name">{product.name}</span>
-        <span className={`product-status ${product.status}`}>{product.status}</span>
+        <span className="product-desc">{product.function}</span>
       </button>
       <button
         role="switch"

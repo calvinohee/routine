@@ -1,5 +1,6 @@
 /* Design tokens — iOS-native feel. Accent used sparingly. */
 :root {
+  --safe-top: env(safe-area-inset-top, 0px);
   --accent: #00c2cb;
   --accent-dim: rgba(0, 194, 203, 0.14);
 

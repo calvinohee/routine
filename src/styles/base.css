@@ -49,7 +49,7 @@ button {
   font-weight: 800;
   letter-spacing: 0.2px;
   margin: 0;
-  padding-top: calc(14px + env(safe-area-inset-top, 0px));
+  padding-top: calc(14px + var(--safe-top));
   padding-bottom: 4px;
 }
 
@@ -561,17 +561,13 @@ button {
   font-size: 15.5px;
   font-weight: 550;
 }
-.product-status {
-  font-size: 12px;
+.product-desc {
+  font-size: 12.5px;
   color: var(--text-3);
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-}
-.product-status.benched {
-  color: var(--danger);
-}
-.product-status.situational {
-  color: var(--text-2);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .toggle {
@@ -669,9 +665,17 @@ button {
   top: 0;
   left: 0;
   right: 0;
-  height: env(safe-area-inset-top, 0px);
+  height: var(--safe-top);
   background: var(--bg);
   z-index: 25;
+}
+
+/* Installed app: iOS draws content from the very top; if it reports no inset
+   (older installs), assume a standard status-bar height so nothing collides. */
+@media all and (display-mode: standalone) {
+  :root {
+    --safe-top: max(env(safe-area-inset-top, 0px), 54px);
+  }
 }
 
 [hidden] {

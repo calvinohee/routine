@@ -53,12 +53,12 @@ describe('full app flow', () => {
     expect(sessions.length).toBe(2) // seed session + the one just logged
   })
 
-  test('History and Library tabs show placeholders', async () => {
+  test('History renders; Library still shows its placeholder', async () => {
     const user = userEvent.setup()
     render(<App />)
     await screen.findByRole('heading', { name: 'Today' })
     await user.click(screen.getByRole('button', { name: 'History' }))
-    expect(screen.getByText(/Coming in Phase 2/)).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'History' })).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Library' }))
     expect(screen.getByText(/Coming in Phase 3/)).toBeInTheDocument()
   })

@@ -1,15 +1,6 @@
 import type { ResolvedRoutine } from '../engine/types'
 import { CountdownTimer } from './CountdownTimer'
-
-const NIGHT_LABELS: Record<string, string> = {
-  bha: 'BHA night',
-  tn: 'TN night',
-  adapalene: 'Adapalene night',
-  clay: 'Clay night',
-  vc100: 'VC100 mask night',
-  simple: 'Simple night',
-  benzac: 'Benzac night',
-}
+import { NIGHT_LABELS } from '../lib/labels'
 
 interface Props {
   routine: ResolvedRoutine

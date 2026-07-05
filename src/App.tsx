@@ -4,6 +4,7 @@ import { db } from './db/db'
 import { seedIfNeeded } from './db/state'
 import { TabBar, type Tab } from './components/TabBar'
 import { TodayScreen } from './components/TodayScreen'
+import { HistoryScreen } from './components/history/HistoryScreen'
 
 function Placeholder({ title, phase }: { title: string; phase: string }) {
   return (
@@ -33,7 +34,7 @@ export default function App() {
     <>
       <main className="app-main">
         {tab === 'today' && <TodayScreen />}
-        {tab === 'history' && <Placeholder title="History" phase="Phase 2" />}
+        {tab === 'history' && <HistoryScreen />}
         {tab === 'library' && <Placeholder title="Library" phase="Phase 3" />}
       </main>
       <TabBar tab={tab} onChange={setTab} />

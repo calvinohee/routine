@@ -3,16 +3,8 @@ import { phaseGuidance, phaseWeeklyTarget, isInPurgeWindow } from '../engine/ada
 import { quotaCounts } from '../engine/quotas'
 import { diffDays } from '../engine/dates'
 import type { IsoDate } from '../engine/types'
+import { PHASE_LABELS } from '../lib/labels'
 
-const PHASE_LABELS: Record<string, string> = {
-  'patch-test': 'Patch test',
-  preauricular: 'Preauricular strips',
-  'one-cheek': 'One cheek',
-  'full-face-1x': 'Full face · 1×/week',
-  'full-face-2x': 'Full face · 2×/week',
-  'full-face-3x': 'Full face · 3×/week',
-  established: 'Established',
-}
 
 interface Props {
   date: IsoDate

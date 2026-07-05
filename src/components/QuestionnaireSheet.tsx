@@ -19,6 +19,7 @@ import type {
 import { DAY_TYPES, ZONES } from '../engine/types'
 import { weekdayOf } from '../engine/dates'
 import { Sheet } from './Sheet'
+import { ZONE_LABELS } from '../lib/labels'
 
 const DAY_TYPE_LABELS: Record<DayType, string> = {
   'gym-office': 'Gym + office',
@@ -38,20 +39,6 @@ const AM_SKIN: Array<[SkinState, string]> = [
   ['irritated', 'Irritated'],
 ]
 
-const ZONE_LABELS: Record<Zone, string> = {
-  forehead: 'Forehead',
-  nose: 'Nose',
-  'cheek-l': 'Cheek L',
-  'cheek-r': 'Cheek R',
-  'jaw-l': 'Jaw L',
-  'jaw-r': 'Jaw R',
-  chin: 'Chin',
-  'below-ear-l': 'Below ear L',
-  'below-ear-r': 'Below ear R',
-  'preauricular-l': 'Front of ear L',
-  'preauricular-r': 'Front of ear R',
-  neck: 'Neck',
-}
 
 const PATCH_OPTIONS: Array<[PatchNeed, string, string]> = [
   ['none', 'No patches', ''],

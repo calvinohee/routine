@@ -401,3 +401,137 @@ button {
   padding: 80px 24px;
   font-size: 15px;
 }
+
+/* History */
+.hx-section {
+  font-size: 21px;
+  font-weight: 700;
+  margin: 20px 0 10px;
+}
+.hx-session {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--separator);
+}
+.hx-session:last-child {
+  border-bottom: none;
+}
+.hx-session-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hx-slot {
+  flex: none;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 3px 7px;
+  border-radius: 6px;
+  background: var(--surface-2);
+  color: var(--text-2);
+}
+.hx-slot.pm {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+.hx-weather {
+  margin-left: auto;
+  color: var(--text-3);
+  font-size: 13px;
+}
+.hx-note {
+  color: var(--text-2);
+  font-size: 13.5px;
+  margin-top: 5px;
+}
+.hx-live {
+  color: var(--accent);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.chip.readonly {
+  min-height: 0;
+  padding: 4px 10px;
+  font-size: 13px;
+  cursor: default;
+}
+
+/* Weekly rollups */
+.rollup-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  text-align: left;
+  gap: 10px;
+}
+.rollup-summary {
+  display: block;
+  color: var(--text-2);
+  font-size: 13.5px;
+  margin-top: 2px;
+}
+.rollup-chevron {
+  color: var(--text-3);
+  font-size: 22px;
+  transform: rotate(90deg);
+  transition: transform 0.2s;
+}
+.rollup-chevron.open {
+  transform: rotate(-90deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .rollup-chevron {
+    transition: none;
+  }
+}
+
+/* Timelines */
+.timeline {
+  display: flex;
+  flex-direction: column;
+}
+.tl-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 5px 0;
+  position: relative;
+}
+.tl-date {
+  flex: none;
+  width: 52px;
+  color: var(--text-3);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.tl-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--separator);
+  align-self: center;
+}
+.tl-row.pair .tl-dot,
+.tl-row.current .tl-dot {
+  background: var(--accent);
+}
+.tl-row.healed .tl-dot {
+  background: var(--success);
+}
+.tl-row.escalated .tl-dot,
+.tl-row.derm .tl-dot,
+.tl-row.update .tl-dot {
+  background: var(--text-3);
+}
+.tl-label {
+  font-size: 15px;
+}
+.tl-row.current .tl-label {
+  font-weight: 650;
+}
+.tl-sub {
+  color: var(--text-2);
+  font-size: 13.5px;
+}

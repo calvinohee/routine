@@ -535,3 +535,130 @@ button {
   color: var(--text-2);
   font-size: 13.5px;
 }
+
+/* Library */
+.product-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--separator);
+}
+.product-row:last-child {
+  border-bottom: none;
+}
+.product-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  text-align: left;
+  min-width: 0;
+}
+.product-name {
+  font-size: 15.5px;
+  font-weight: 550;
+}
+.product-status {
+  font-size: 12px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.product-status.benched {
+  color: var(--danger);
+}
+.product-status.situational {
+  color: var(--text-2);
+}
+
+.toggle {
+  flex: none;
+  width: 51px;
+  min-height: 31px;
+  height: 31px;
+  border-radius: 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--separator);
+  position: relative;
+  transition: background 0.2s;
+}
+.toggle.on {
+  background: var(--accent);
+  border-color: transparent;
+}
+.toggle .knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s;
+}
+.toggle.on .knob {
+  transform: translateX(20px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .toggle,
+  .toggle .knob {
+    transition: none;
+  }
+}
+
+.reenable-confirm {
+  width: 100%;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--text-2);
+  margin: 4px 0 8px;
+}
+
+/* Settings */
+.settings-hint {
+  color: var(--text-2);
+  font-size: 13.5px;
+  margin: 0 0 10px;
+}
+.stepper-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--separator);
+}
+.stepper-row:last-child {
+  border-bottom: none;
+}
+.stepper-label {
+  font-size: 15px;
+}
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--surface-2);
+  border-radius: 10px;
+}
+.stepper button {
+  width: 40px;
+  min-height: 36px;
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--accent);
+}
+.stepper-value {
+  min-width: 56px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}

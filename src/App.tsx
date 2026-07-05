@@ -5,15 +5,7 @@ import { seedIfNeeded } from './db/state'
 import { TabBar, type Tab } from './components/TabBar'
 import { TodayScreen } from './components/TodayScreen'
 import { HistoryScreen } from './components/history/HistoryScreen'
-
-function Placeholder({ title, phase }: { title: string; phase: string }) {
-  return (
-    <div>
-      <h1 className="large-title">{title}</h1>
-      <div className="placeholder">Coming in {phase}.</div>
-    </div>
-  )
-}
+import { LibraryScreen } from './components/library/LibraryScreen'
 
 export default function App() {
   const [tab, setTab] = useState<Tab>('today')
@@ -35,7 +27,7 @@ export default function App() {
       <main className="app-main">
         {tab === 'today' && <TodayScreen />}
         {tab === 'history' && <HistoryScreen />}
-        {tab === 'library' && <Placeholder title="Library" phase="Phase 3" />}
+        {tab === 'library' && <LibraryScreen />}
       </main>
       <TabBar tab={tab} onChange={setTab} />
     </>

@@ -80,6 +80,8 @@ export interface Product {
   function: string
   evidence: string
   technique: string
+  /** How long it stays on / takes to absorb — user-facing guidance. */
+  leaveOn: string
   waitMinutes: number
   waitNote?: string
   slots: Slot[]
@@ -257,6 +259,8 @@ export interface RoutineStep {
   purpose: string
   /** Technique / quantity text (from products.json when product-backed). */
   technique: string
+  /** Leave-on/absorb guidance shown under the step (may be absent on old logged sessions). */
+  leaveOn?: string
   /** Explicit wait before the next step, minutes. Rendered as countdown when > 1. */
   waitMinutes: number
 }

@@ -67,6 +67,7 @@ class RoutineBuilder {
       title: product.name,
       purpose,
       technique: product.technique,
+      leaveOn: product.leaveOn,
       waitMinutes: product.waitMinutes,
     })
   }

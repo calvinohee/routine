@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { QuestionnaireSheet } from '../QuestionnaireSheet'
 import { ConflictCards } from '../ConflictCards'
 import { CountdownTimer } from '../CountdownTimer'
+import { RoutineView } from '../RoutineView'
 import { makeSettings } from '../../engine/__tests__/fixtures'
 import type { Answers, ConflictSet } from '../../engine/types'
 
@@ -170,21 +171,21 @@ describe('CountdownTimer persistence', () => {
   })
 
   test('resumes a running timer from storage (survives unmount/remount)', () => {
-    localStorage.setItem('regimen-wait-timer', String(Date.now() + 5 * 60 * 1000))
+    localStorage.setItem('regimen-timer-wait', String(Date.now() + 5 * 60 * 1000))
     render(<CountdownTimer minutes={10} />)
     expect(screen.getByText(/^[45]:\d{2}$/)).toBeInTheDocument()
     localStorage.clear()
   })
 
   test('a timer that finished while away shows Done', () => {
-    localStorage.setItem('regimen-wait-timer', String(Date.now() - 60 * 1000))
+    localStorage.setItem('regimen-timer-wait', String(Date.now() - 60 * 1000))
     render(<CountdownTimer minutes={10} />)
-    expect(screen.getByText(/Done — next layer/)).toBeInTheDocument()
+    expect(screen.getByText(/Done ✓/)).toBeInTheDocument()
     localStorage.clear()
   })
 
   test('a long-expired timer resets to idle', () => {
-    localStorage.setItem('regimen-wait-timer', String(Date.now() - 2 * 60 * 60 * 1000))
+    localStorage.setItem('regimen-timer-wait', String(Date.now() - 2 * 60 * 60 * 1000))
     render(<CountdownTimer minutes={10} />)
     expect(screen.getByRole('button', { name: /Start 10:00 timer/ })).toBeInTheDocument()
     localStorage.clear()
@@ -195,8 +196,85 @@ describe('CountdownTimer persistence', () => {
     const user = userEvent.setup()
     render(<CountdownTimer minutes={10} />)
     await user.click(screen.getByRole('button', { name: /Start 10:00 timer/ }))
-    const stored = Number(localStorage.getItem('regimen-wait-timer'))
+    const stored = Number(localStorage.getItem('regimen-timer-wait'))
     expect(stored).toBeGreaterThan(Date.now() + 9 * 60 * 1000)
     localStorage.clear()
+  })
+})
+
+describe('RoutineView timers and leave-on remarks', () => {
+  const step = (over: Partial<import('../../engine/types').RoutineStep>) => ({
+    kind: 'product' as const,
+    productId: 'x',
+    title: 'X',
+    purpose: '',
+    technique: '',
+    waitMinutes: 0,
+    ...over,
+  })
+  const routine = (steps: import('../../engine/types').RoutineStep[]) => ({
+    nightType: 'vc100' as const,
+    steps,
+    advisories: [],
+    pairSpotIds: [],
+  })
+
+  test('steps over a minute get their own timer (masks, SPF set time)', () => {
+    localStorage.clear()
+    render(
+      <RoutineView
+        routine={routine([
+          step({ productId: 'vc100-sheet-mask', title: 'VC100', waitMinutes: 15, leaveOn: '10–15 minutes on' }),
+        ])}
+        logged
+        onLog={() => undefined}
+      />,
+    )
+    expect(screen.getByRole('button', { name: 'Start 15:00 timer' })).toBeInTheDocument()
+    expect(screen.getByText(/10–15 minutes on/)).toBeInTheDocument()
+  })
+
+  test('one-minute-or-less steps show the remark but no timer', () => {
+    localStorage.clear()
+    render(
+      <RoutineView
+        routine={routine([
+          step({ productId: 'pc-skin-balancing-toner', title: 'Toner', waitMinutes: 1, leaveOn: 'about 1 minute to absorb' }),
+        ])}
+        logged
+        onLog={() => undefined}
+      />,
+    )
+    expect(screen.getByText(/about 1 minute to absorb/)).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /timer/ })).toBeNull()
+  })
+
+  test('the BHA step does not duplicate the dedicated wait-step timer', () => {
+    localStorage.clear()
+    render(
+      <RoutineView
+        routine={routine([
+          step({ productId: 'pc-bha', title: 'BHA', waitMinutes: 10 }),
+          step({ kind: 'wait', productId: null, title: 'Wait 5–10 minutes', waitMinutes: 10 }),
+        ])}
+        logged
+        onLog={() => undefined}
+      />,
+    )
+    expect(screen.getAllByRole('button', { name: /Start 10:00 timer/ })).toHaveLength(1)
+  })
+
+  test('fractional-minute timers format properly (Benzac 90 seconds)', () => {
+    localStorage.clear()
+    render(
+      <RoutineView
+        routine={routine([
+          step({ productId: 'benzac-wash-5', title: 'Benzac', waitMinutes: 1.5, leaveOn: '60–90 seconds, then rinse' }),
+        ])}
+        logged
+        onLog={() => undefined}
+      />,
+    )
+    expect(screen.getByRole('button', { name: 'Start 1:30 timer' })).toBeInTheDocument()
   })
 })

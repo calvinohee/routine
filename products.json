@@ -13,10 +13,16 @@
       "evidence": "moderate",
       "technique": "3–4 pumps to DRY hands, onto DRY face. Massage ~60s, add water to emulsify until milky, rinse.",
       "waitMinutes": 0,
-      "slots": ["pm"],
+      "slots": [
+        "pm"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": ["first-cleanse-when-spf-cc-or-wax-worn", "dry-hands-dry-face"]
+      "conditions": [
+        "first-cleanse-when-spf-cc-or-wax-worn",
+        "dry-hands-dry-face"
+      ],
+      "leaveOn": "About 60 seconds of massage, emulsify, then rinse."
     },
     {
       "id": "curel-foaming-wash",
@@ -29,10 +35,17 @@
       "evidence": "moderate",
       "technique": "1–2 pumps, lather in hands, circular motions, lukewarm rinse, pat dry.",
       "waitMinutes": 0,
-      "slots": ["pm"],
+      "slots": [
+        "pm"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": ["second-cleanse-on-double-nights", "single-cleanse-otherwise", "not-am"]
+      "conditions": [
+        "second-cleanse-on-double-nights",
+        "single-cleanse-otherwise",
+        "not-am"
+      ],
+      "leaveOn": "20–30 seconds of gentle circles, then rinse."
     },
     {
       "id": "cerave-sa-cleanser",
@@ -45,10 +58,17 @@
       "evidence": "moderate",
       "technique": "1–2 pumps in the gym shower, wet skin, circular motions, rinse.",
       "waitMinutes": 0,
-      "slots": ["am"],
-      "activeTags": ["salicylic-acid-washoff"],
+      "slots": [
+        "am"
+      ],
+      "activeTags": [
+        "salicylic-acid-washoff"
+      ],
       "conflictTags": [],
-      "conditions": ["post-gym-shower-only"]
+      "conditions": [
+        "post-gym-shower-only"
+      ],
+      "leaveOn": "About 30 seconds in the shower, then rinse."
     },
     {
       "id": "benzac-wash-5",
@@ -60,11 +80,24 @@
       "function": "5% benzoyl peroxide — antibacterial vs C. acnes; strong evidence for inflammatory acne. Oil-free, fragrance-free.",
       "evidence": "strong",
       "technique": "Short-contact: apply to wet skin, leave 60–90s, rinse. Dedicated dark towel (bleaches fabric).",
-      "waitMinutes": 0,
-      "slots": ["pm"],
-      "activeTags": ["benzoyl-peroxide"],
-      "conflictTags": ["never-with-bha", "never-with-adapalene", "never-on-broken-skin", "max-5-consecutive-nights"],
-      "conditions": ["benzac-mode-only", "replaces-second-cleanse"]
+      "waitMinutes": 1.5,
+      "slots": [
+        "pm"
+      ],
+      "activeTags": [
+        "benzoyl-peroxide"
+      ],
+      "conflictTags": [
+        "never-with-bha",
+        "never-with-adapalene",
+        "never-on-broken-skin",
+        "max-5-consecutive-nights"
+      ],
+      "conditions": [
+        "benzac-mode-only",
+        "replaces-second-cleanse"
+      ],
+      "leaveOn": "Leave 60–90 seconds, then rinse thoroughly."
     },
     {
       "id": "pc-skin-balancing-toner",
@@ -77,10 +110,16 @@
       "evidence": "strong",
       "technique": "Pour a 50c-coin pool to palm (or saturate a pad), pat over face.",
       "waitMinutes": 1,
-      "slots": ["am", "pm"],
+      "slots": [
+        "am",
+        "pm"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": ["first-product-on-skin-every-routine"]
+      "conditions": [
+        "first-product-on-skin-every-routine"
+      ],
+      "leaveOn": "Pat in; about 1 minute to absorb."
     },
     {
       "id": "obk-balancing-tuner",
@@ -93,10 +132,19 @@
       "evidence": "brand-claim",
       "technique": "50c-coin pool to palm or pad, pat T-zone/oily areas only.",
       "waitMinutes": 1,
-      "slots": ["am"],
+      "slots": [
+        "am"
+      ],
       "activeTags": [],
-      "conflictTags": ["skip-if-dry-tight-cheeks"],
-      "conditions": ["office-or-outing-days", "before-pc-toner", "pre-shave-placement"]
+      "conflictTags": [
+        "skip-if-dry-tight-cheeks"
+      ],
+      "conditions": [
+        "office-or-outing-days",
+        "before-pc-toner",
+        "pre-shave-placement"
+      ],
+      "leaveOn": "Pat on the T-zone; about 1 minute to settle."
     },
     {
       "id": "obk-serum-veil",
@@ -105,14 +153,21 @@
       "status": "active",
       "enabled": true,
       "format": "pump",
-      "function": "Rice Power No.11 ceramide-synthesis claim (limited independent data), HA, squalane. Reduced alcohol, fragrance.",
+      "function": "Rice Power No.11 (rice ferment filtrate) — the one Japanese-approved active shown to support the skin’s own ceramide synthesis — with super hyaluronic acid and squalane. Barrier repair for nights when BHA work stacks up. Reduced alcohol, light fragrance.",
       "evidence": "brand-claim",
       "technique": "1 pump, press in.",
       "waitMinutes": 1,
-      "slots": ["pm"],
+      "slots": [
+        "pm"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": ["bha-nights-with-tight-cheeks", "or-3rd-consecutive-bha-night", "otherwise-skip"]
+      "conditions": [
+        "bha-nights-with-tight-cheeks",
+        "or-3rd-consecutive-bha-night",
+        "otherwise-skip"
+      ],
+      "leaveOn": "Press in; about 1 minute to absorb."
     },
     {
       "id": "shirojyun-premium",
@@ -125,10 +180,22 @@
       "evidence": "strong",
       "technique": "Pour to palm, pat all over, extra press into cheeks.",
       "waitMinutes": 1,
-      "slots": ["am", "pm"],
-      "activeTags": ["txa"],
-      "conflictTags": ["skip-on-tn-nights"],
-      "conditions": ["pm-every-night", "am-only-dry-cheek-mornings", "after-bha-wait-on-bha-nights"]
+      "slots": [
+        "am",
+        "pm"
+      ],
+      "activeTags": [
+        "txa"
+      ],
+      "conflictTags": [
+        "skip-on-tn-nights"
+      ],
+      "conditions": [
+        "pm-every-night",
+        "am-only-dry-cheek-mornings",
+        "after-bha-wait-on-bha-nights"
+      ],
+      "leaveOn": "Pat in; about 1 minute to absorb."
     },
     {
       "id": "gokujyun-premium-gold",
@@ -141,10 +208,16 @@
       "evidence": "moderate",
       "technique": "As Shirojyun: pour to palm, pat all over.",
       "waitMinutes": 1,
-      "slots": ["pm"],
+      "slots": [
+        "pm"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": ["barrier-emergency-nights-only", "loses-txa-coverage"]
+      "conditions": [
+        "barrier-emergency-nights-only",
+        "loses-txa-coverage"
+      ],
+      "leaveOn": "Pat in; about 1 minute to absorb."
     },
     {
       "id": "gokujyun-light-white",
@@ -154,14 +227,15 @@
       "enabled": false,
       "benchedReason": "Redundant with Shirojyun/Gokujyun Premium.",
       "format": "pour bottle",
-      "function": "Light HA lotion.",
+      "function": "Lightweight hyaluronic-acid lotion (multiple HA weights), no actives — pure watery hydration. Overlaps entirely with Shirojyun and Gokujyun Premium, which is why it sits out.",
       "evidence": "moderate",
       "technique": "",
       "waitMinutes": 0,
       "slots": [],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": []
+      "conditions": [],
+      "leaveOn": "Pat in; about 1 minute to absorb."
     },
     {
       "id": "melano-cc-men",
@@ -174,10 +248,21 @@
       "evidence": "strong",
       "technique": "~10c-coin pool to palm (several drops), press into forehead/each cheek/nose/chin. Don't rub.",
       "waitMinutes": 1,
-      "slots": ["am"],
-      "activeTags": ["vitamin-c", "salicylic-acid"],
-      "conflictTags": ["am-only", "never-same-pm-as-bha"],
-      "conditions": ["daily-am"]
+      "slots": [
+        "am"
+      ],
+      "activeTags": [
+        "vitamin-c",
+        "salicylic-acid"
+      ],
+      "conflictTags": [
+        "am-only",
+        "never-same-pm-as-bha"
+      ],
+      "conditions": [
+        "daily-am"
+      ],
+      "leaveOn": "Press in; about 1 minute to absorb."
     },
     {
       "id": "melano-cc-premium",
@@ -190,10 +275,19 @@
       "evidence": "strong",
       "technique": "~10c-coin pool, press onto full face.",
       "waitMinutes": 1,
-      "slots": ["pm"],
-      "activeTags": ["vitamin-c"],
+      "slots": [
+        "pm"
+      ],
+      "activeTags": [
+        "vitamin-c"
+      ],
       "conflictTags": [],
-      "conditions": ["bha-nights", "after-bha-wait-and-shirojyun", "before-centella"]
+      "conditions": [
+        "bha-nights",
+        "after-bha-wait-and-shirojyun",
+        "before-centella"
+      ],
+      "leaveOn": "Press in; about 1 minute to absorb."
     },
     {
       "id": "pc-bha",
@@ -207,10 +301,25 @@
       "technique": "Small amount to palm/pad, thin layer full face, around (not over) open spots.",
       "waitMinutes": 10,
       "waitNote": "5–10 min wait is non-negotiable before the next layer.",
-      "slots": ["pm"],
-      "activeTags": ["bha", "salicylic-acid", "leave-on-exfoliant"],
-      "conflictTags": ["never-with-benzac", "never-with-adapalene", "never-with-melano-cc-men-same-pm", "counts-toward-consecutive-active-cap"],
-      "conditions": ["quota-3x-per-rolling-7-floor", "before-shirojyun"]
+      "slots": [
+        "pm"
+      ],
+      "activeTags": [
+        "bha",
+        "salicylic-acid",
+        "leave-on-exfoliant"
+      ],
+      "conflictTags": [
+        "never-with-benzac",
+        "never-with-adapalene",
+        "never-with-melano-cc-men-same-pm",
+        "counts-toward-consecutive-active-cap"
+      ],
+      "conditions": [
+        "quota-3x-per-rolling-7-floor",
+        "before-shirojyun"
+      ],
+      "leaveOn": "Leave on — the 5–10 minute wait before the next layer is the point."
     },
     {
       "id": "differin-adapalene",
@@ -224,10 +333,25 @@
       "technique": "Pea-sized to full face on COMPLETELY DRY skin (intro phases: tiny amount to the assigned test zone only).",
       "waitMinutes": 0,
       "waitNote": "Previous layer must be fully absorbed and skin dry before applying; wait until absorbed, then moisturiser.",
-      "slots": ["pm"],
-      "activeTags": ["retinoid", "leave-on-exfoliant"],
-      "conflictTags": ["never-with-bha", "never-with-benzac", "never-with-clay", "counts-toward-consecutive-active-cap", "not-on-open-wounds"],
-      "conditions": ["per-adapalene-phase", "intro-phase-isolated-sequence"]
+      "slots": [
+        "pm"
+      ],
+      "activeTags": [
+        "retinoid",
+        "leave-on-exfoliant"
+      ],
+      "conflictTags": [
+        "never-with-bha",
+        "never-with-benzac",
+        "never-with-clay",
+        "counts-toward-consecutive-active-cap",
+        "not-on-open-wounds"
+      ],
+      "conditions": [
+        "per-adapalene-phase",
+        "intro-phase-isolated-sequence"
+      ],
+      "leaveOn": "Leave on overnight; let it absorb fully before moisturiser."
     },
     {
       "id": "skin1004-centella",
@@ -240,10 +364,16 @@
       "evidence": "moderate",
       "technique": "3–4 dropper squeezes, press gently over face.",
       "waitMinutes": 1,
-      "slots": ["pm"],
+      "slots": [
+        "pm"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": ["bha-nights-only-as-calming-buffer", "benzac-nights"]
+      "conditions": [
+        "bha-nights-only-as-calming-buffer",
+        "benzac-nights"
+      ],
+      "leaveOn": "Press in; about 1 minute to absorb."
     },
     {
       "id": "cosdebaha-tn",
@@ -256,10 +386,21 @@
       "evidence": "strong",
       "technique": "3–4 dropper squeezes, press onto full face.",
       "waitMinutes": 1,
-      "slots": ["pm"],
-      "activeTags": ["txa", "leave-on-serum"],
-      "conflictTags": ["skip-shirojyun-this-night", "one-leave-on-active-per-pm"],
-      "conditions": ["quota-2x-per-rolling-7"]
+      "slots": [
+        "pm"
+      ],
+      "activeTags": [
+        "txa",
+        "leave-on-serum"
+      ],
+      "conflictTags": [
+        "skip-shirojyun-this-night",
+        "one-leave-on-active-per-pm"
+      ],
+      "conditions": [
+        "quota-2x-per-rolling-7"
+      ],
+      "leaveOn": "Press in; about 1 minute to absorb."
     },
     {
       "id": "attonon-scar-gel",
@@ -268,14 +409,19 @@
       "status": "situational",
       "enabled": true,
       "format": "small tube",
-      "function": "Allantoin + heparinoid — raised/textured scars only (NOT flat PIH).",
+      "function": "Kobayashi scar-care gel: heparinoid softens and regenerates, with vitamin C glucoside, dipotassium glycyrrhizate and IPMP. Raised or textured scars only — flat PIH will not respond to this.",
       "evidence": "moderate",
       "technique": "Thin dab on specific raised scars, after moisturiser. Confirm raised scarring actually present first.",
       "waitMinutes": 0,
-      "slots": ["pm"],
+      "slots": [
+        "pm"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": ["raised-scars-only"]
+      "conditions": [
+        "raised-scars-only"
+      ],
+      "leaveOn": "Dab on raised scars; rubs in within 30 seconds."
     },
     {
       "id": "anua-azelaic",
@@ -283,16 +429,19 @@
       "category": "active",
       "status": "benched",
       "enabled": false,
-      "benchedReason": "Permanently benched — suspected breakout trigger (May 2026). Never recommend.",
+      "benchedReason": "Permanently retired — suspected breakout trigger (May 2026). Never recommend.",
       "format": "tube",
-      "function": "Azelaic acid 10%.",
+      "function": "Azelaic acid 10% cream-gel — comedolytic and anti-inflammatory on paper, but correlated with a breakout cluster in May 2026. Retired for good.",
       "evidence": "moderate",
       "technique": "",
       "waitMinutes": 0,
       "slots": [],
-      "activeTags": ["azelaic-acid"],
+      "activeTags": [
+        "azelaic-acid"
+      ],
       "conflictTags": [],
-      "conditions": []
+      "conditions": [],
+      "leaveOn": "Was leave-on; retired from the routine."
     },
     {
       "id": "ordinary-niacinamide",
@@ -302,14 +451,15 @@
       "enabled": false,
       "benchedReason": "Redundant — niacinamide covered by PC toner and TN serum.",
       "format": "dropper",
-      "function": "Niacinamide 10%, zinc PCA 1%.",
+      "function": "Niacinamide 10% + zinc PCA 1% — oil regulation and barrier support. The routine already gets steady niacinamide from the PC toner (~2%) and TN serum (5%); 10% on top adds irritation risk, not benefit.",
       "evidence": "strong",
       "technique": "",
       "waitMinutes": 0,
       "slots": [],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": []
+      "conditions": [],
+      "leaveOn": "Leave on; about 1 minute to absorb."
     },
     {
       "id": "cosrx-snail-92",
@@ -322,10 +472,18 @@
       "evidence": "moderate",
       "technique": "Pea-to-almond amount, press and pat over face.",
       "waitMinutes": 0,
-      "slots": ["am", "pm"],
+      "slots": [
+        "am",
+        "pm"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": ["pm-default", "am-only-if-cheeks-notably-dry", "hot-humid-assess-if-needed-pm"]
+      "conditions": [
+        "pm-default",
+        "am-only-if-cheeks-notably-dry",
+        "hot-humid-assess-if-needed-pm"
+      ],
+      "leaveOn": "Leave on; 1–2 minutes to settle before anything else."
     },
     {
       "id": "curel-moisture-cream",
@@ -338,10 +496,16 @@
       "evidence": "moderate",
       "technique": "Scoop small amount with clean fingertips. Cheeks only on reactive nights; T-zone stays Snail 92.",
       "waitMinutes": 0,
-      "slots": ["pm"],
+      "slots": [
+        "pm"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": ["post-benzac-raw-winter-or-barrier-emergency", "cheeks-only"]
+      "conditions": [
+        "post-benzac-raw-winter-or-barrier-emergency",
+        "cheeks-only"
+      ],
+      "leaveOn": "Leave on overnight; no wait needed after."
     },
     {
       "id": "pair-acne-cream-w",
@@ -350,14 +514,22 @@
       "status": "active",
       "enabled": true,
       "format": "squeeze tube",
-      "function": "Ibuprofen piconol (anti-inflammatory) + IPMP (antibacterial) — early inflamed spots.",
+      "function": "Lion OTC spot treatment: ibuprofen piconol 3% (anti-inflammatory) + IPMP 0.3% (antibacterial) — calms early inflamed spots. Does nothing for closed comedones.",
       "evidence": "moderate",
       "technique": "Thin fingertip dab on INDIVIDUAL spots only, ABSOLUTE LAST step after moisturiser. Never spread across a cluster, never preventive.",
       "waitMinutes": 0,
-      "slots": ["pm"],
+      "slots": [
+        "pm"
+      ],
       "activeTags": [],
-      "conflictTags": ["last-step-always", "not-am-except-severe"],
-      "conditions": ["escalate-after-5-nights-no-improvement"]
+      "conflictTags": [
+        "last-step-always",
+        "not-am-except-severe"
+      ],
+      "conditions": [
+        "escalate-after-5-nights-no-improvement"
+      ],
+      "leaveOn": "Leave on overnight — dab on, don’t rub in."
     },
     {
       "id": "vt-pro-cica-patch",
@@ -370,10 +542,20 @@
       "evidence": "moderate",
       "technique": "On CLEAN, BARE, DRY skin BEFORE all products. Routine goes around it.",
       "waitMinutes": 0,
-      "slots": ["am", "pm"],
+      "slots": [
+        "am",
+        "pm"
+      ],
       "activeTags": [],
-      "conflictTags": ["applied-first-on-bare-skin"],
-      "conditions": ["whiteheads", "burst-or-open-spots", "daytime-office"]
+      "conflictTags": [
+        "applied-first-on-bare-skin"
+      ],
+      "conditions": [
+        "whiteheads",
+        "burst-or-open-spots",
+        "daytime-office"
+      ],
+      "leaveOn": "Wear through the day (8+ hours); replace when the centre turns white."
     },
     {
       "id": "cosrx-master-patch",
@@ -386,10 +568,16 @@
       "evidence": "moderate",
       "technique": "Clean/bare/dry skin. Overnight pillow barrier on closed lumps (jaw underside, neck, sideburn). EXCEPTION: as pillow barrier it goes OVER settled Pair as the final step.",
       "waitMinutes": 0,
-      "slots": ["pm"],
+      "slots": [
+        "pm"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": ["closed-lumps-overnight", "not-first-choice-under-cc"]
+      "conditions": [
+        "closed-lumps-overnight",
+        "not-first-choice-under-cc"
+      ],
+      "leaveOn": "Wear overnight; peel off in the morning."
     },
     {
       "id": "cosrx-snail-96",
@@ -399,14 +587,15 @@
       "enabled": false,
       "benchedReason": "Redundant with Snail 92.",
       "format": "bottle",
-      "function": "Snail mucin essence.",
+      "function": "96% snail secretion filtrate essence — the lighter, runnier sibling of Snail 92. Same mucin repair story, fully covered by Snail 92.",
       "evidence": "moderate",
       "technique": "",
       "waitMinutes": 0,
       "slots": [],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": []
+      "conditions": [],
+      "leaveOn": "Leave on; 1–2 minutes to absorb."
     },
     {
       "id": "curel-moisture-spray",
@@ -416,14 +605,15 @@
       "enabled": false,
       "benchedReason": "No function in current routine.",
       "format": "spray",
-      "function": "Moisture mist.",
+      "function": "Ceramide-care moisture mist for on-the-go top-ups. Pleasant, but adds nothing the leave-ons don’t already do.",
       "evidence": "brand-claim",
       "technique": "",
       "waitMinutes": 0,
       "slots": [],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": []
+      "conditions": [],
+      "leaveOn": "Mist as needed; no wait."
     },
     {
       "id": "lrp-effaclar-clay",
@@ -436,10 +626,22 @@
       "evidence": "moderate",
       "technique": "Thin layer after cleanse, avoid lumps/wounds/patches. 5 min, rinse.",
       "waitMinutes": 5,
-      "slots": ["pm"],
-      "activeTags": ["clay-mask"],
-      "conflictTags": ["simple-night-only", "never-same-session-as-sheet-mask", "never-with-adapalene"],
-      "conditions": ["quota-1x-per-rolling-7", "preassigned-day"]
+      "slots": [
+        "pm"
+      ],
+      "activeTags": [
+        "clay-mask"
+      ],
+      "conflictTags": [
+        "simple-night-only",
+        "never-same-session-as-sheet-mask",
+        "never-with-adapalene"
+      ],
+      "conditions": [
+        "quota-1x-per-rolling-7",
+        "preassigned-day"
+      ],
+      "leaveOn": "5 minutes on, then rinse."
     },
     {
       "id": "innisfree-volcanic-clay",
@@ -452,10 +654,23 @@
       "evidence": "moderate",
       "technique": "Scoop with clean fingertips, thin layer, 10 min, rinse.",
       "waitMinutes": 10,
-      "slots": ["pm"],
-      "activeTags": ["clay-mask", "aha"],
-      "conflictTags": ["simple-night-only", "never-same-session-as-sheet-mask", "never-with-adapalene", "not-on-irritated-skin"],
-      "conditions": ["clear-tolerant-weeks-only"]
+      "slots": [
+        "pm"
+      ],
+      "activeTags": [
+        "clay-mask",
+        "aha"
+      ],
+      "conflictTags": [
+        "simple-night-only",
+        "never-same-session-as-sheet-mask",
+        "never-with-adapalene",
+        "not-on-irritated-skin"
+      ],
+      "conditions": [
+        "clear-tolerant-weeks-only"
+      ],
+      "leaveOn": "10 minutes on, then rinse."
     },
     {
       "id": "vc100-sheet-mask",
@@ -464,14 +679,26 @@
       "status": "active",
       "enabled": true,
       "format": "sachet sheet",
-      "function": "4 vitamin C types + niacinamide + ceramide NP — strongest brightening match for acne + PIH goals. Contains essential oils. Restock same variant.",
+      "function": "Four vitamin C forms (ascorbic acid, APPS, ascorbyl tetrahexyldecanoate, MAP) plus niacinamide and ceramide NP in a nano-capsule essence — the strongest brightening match for the acne + PIH goals. Contains essential oils; restock the same variant.",
       "evidence": "strong",
       "technique": "After PC toner + Shirojyun. 10–15 min, remove, pat in (don't rinse). REPLACES the serum step. Snail 92 after.",
       "waitMinutes": 15,
-      "slots": ["pm"],
-      "activeTags": ["sheet-mask", "vitamin-c"],
-      "conflictTags": ["simple-night-only", "never-same-session-as-clay"],
-      "conditions": ["quota-1x-per-rolling-7-minimum", "preassigned-saturday"]
+      "slots": [
+        "pm"
+      ],
+      "activeTags": [
+        "sheet-mask",
+        "vitamin-c"
+      ],
+      "conflictTags": [
+        "simple-night-only",
+        "never-same-session-as-clay"
+      ],
+      "conditions": [
+        "quota-1x-per-rolling-7-minimum",
+        "preassigned-saturday"
+      ],
+      "leaveOn": "10–15 minutes on, then pat the rest in — don’t rinse."
     },
     {
       "id": "anua-heartleaf-sheet-mask",
@@ -484,10 +711,20 @@
       "evidence": "moderate",
       "technique": "After PC toner + Shirojyun, 10–15 min, pat in. Replaces serum step.",
       "waitMinutes": 15,
-      "slots": ["pm"],
-      "activeTags": ["sheet-mask"],
-      "conflictTags": ["simple-night-only", "never-same-session-as-clay"],
-      "conditions": ["reactive-or-sensitive-nights"]
+      "slots": [
+        "pm"
+      ],
+      "activeTags": [
+        "sheet-mask"
+      ],
+      "conflictTags": [
+        "simple-night-only",
+        "never-same-session-as-clay"
+      ],
+      "conditions": [
+        "reactive-or-sensitive-nights"
+      ],
+      "leaveOn": "10–15 minutes on, then pat the rest in."
     },
     {
       "id": "anessa-perfect-uv-gold",
@@ -500,10 +737,17 @@
       "evidence": "strong",
       "technique": "Last AM skincare step. Shake, two-finger strip, press in.",
       "waitMinutes": 3,
-      "slots": ["am"],
-      "activeTags": ["spf"],
+      "slots": [
+        "am"
+      ],
+      "activeTags": [
+        "spf"
+      ],
       "conflictTags": [],
-      "conditions": ["office-gym-commute-tier"]
+      "conditions": [
+        "office-gym-commute-tier"
+      ],
+      "leaveOn": "Give it 2–3 minutes to set before CC cream or heading out."
     },
     {
       "id": "boj-aqua-fresh",
@@ -516,10 +760,17 @@
       "evidence": "strong",
       "technique": "Two-finger strip, press in.",
       "waitMinutes": 3,
-      "slots": ["am"],
-      "activeTags": ["spf"],
+      "slots": [
+        "am"
+      ],
+      "activeTags": [
+        "spf"
+      ],
       "conflictTags": [],
-      "conditions": ["casual-outdoor-tier"]
+      "conditions": [
+        "casual-outdoor-tier"
+      ],
+      "leaveOn": "Give it 2–3 minutes to set before heading out."
     },
     {
       "id": "biore-aqua-rich",
@@ -532,10 +783,17 @@
       "evidence": "strong",
       "technique": "Two-finger strip, press in.",
       "waitMinutes": 3,
-      "slots": ["am"],
-      "activeTags": ["spf"],
+      "slots": [
+        "am"
+      ],
+      "activeTags": [
+        "spf"
+      ],
       "conflictTags": [],
-      "conditions": ["wfh-incidental-tier-default"]
+      "conditions": [
+        "wfh-incidental-tier-default"
+      ],
+      "leaveOn": "Give it 2–3 minutes to set."
     },
     {
       "id": "lrp-anti-shine",
@@ -548,10 +806,17 @@
       "evidence": "strong",
       "technique": "PAT on, don't rub (pilling).",
       "waitMinutes": 3,
-      "slots": ["am"],
-      "activeTags": ["spf"],
+      "slots": [
+        "am"
+      ],
+      "activeTags": [
+        "spf"
+      ],
       "conflictTags": [],
-      "conditions": ["35c-plus-only"]
+      "conditions": [
+        "35c-plus-only"
+      ],
+      "leaveOn": "Give it 2–3 minutes to set."
     },
     {
       "id": "it-cosmetics-cc",
@@ -564,10 +829,17 @@
       "evidence": "moderate",
       "technique": "After SPF sets (2–3 min). Press/pat with fingertips.",
       "waitMinutes": 0,
-      "slots": ["am"],
+      "slots": [
+        "am"
+      ],
       "activeTags": [],
-      "conflictTags": ["triggers-double-cleanse-pm"],
-      "conditions": ["after-spf-sets"]
+      "conflictTags": [
+        "triggers-double-cleanse-pm"
+      ],
+      "conditions": [
+        "after-spf-sets"
+      ],
+      "leaveOn": "No wait — pat until blended."
     },
     {
       "id": "lrp-invisible-fluid",
@@ -577,14 +849,17 @@
       "enabled": false,
       "benchedReason": "Cut — not matte enough.",
       "format": "bottle",
-      "function": "Fluid SPF.",
+      "function": "Very light organic-filter SPF50+ fluid. Elegant to wear, but the dewy finish reads shiny on an oily T-zone.",
       "evidence": "strong",
       "technique": "",
       "waitMinutes": 0,
       "slots": [],
-      "activeTags": ["spf"],
+      "activeTags": [
+        "spf"
+      ],
       "conflictTags": [],
-      "conditions": []
+      "conditions": [],
+      "leaveOn": "Give it 2–3 minutes to set."
     },
     {
       "id": "maro-deo-shampoo",
@@ -593,14 +868,19 @@
       "status": "active",
       "enabled": true,
       "format": "pump",
-      "function": "Removes wax; scalp cleanse.",
+      "function": "Men’s scalp shampoo with a deodorising persimmon-tannin complex — cuts wax and sebum without sulfate-level stripping.",
       "evidence": "brand-claim",
       "technique": "PM on wax/post-gym-evening nights. Always with Muji scrubber, gentle circles.",
       "waitMinutes": 0,
-      "slots": ["pm"],
+      "slots": [
+        "pm"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": ["wax-days-pm-only"]
+      "conditions": [
+        "wax-days-pm-only"
+      ],
+      "leaveOn": "Lather about 30 seconds, then rinse."
     },
     {
       "id": "maro-deo-treatment",
@@ -609,14 +889,19 @@
       "status": "active",
       "enabled": true,
       "format": "pump",
-      "function": "Post-shampoo treatment, scalp-safe.",
+      "function": "The matching scalp-safe conditioner — restores slip after the deo shampoo without clogging follicles.",
       "evidence": "brand-claim",
       "technique": "After Maro shampoo — scalp AND hair. Massage in, few min, rinse.",
       "waitMinutes": 0,
-      "slots": ["pm"],
+      "slots": [
+        "pm"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": ["after-maro-shampoo"]
+      "conditions": [
+        "after-maro-shampoo"
+      ],
+      "leaveOn": "Leave 2–3 minutes on scalp and hair, then rinse."
     },
     {
       "id": "sukin-shampoo",
@@ -625,14 +910,19 @@
       "status": "active",
       "enabled": true,
       "format": "pump",
-      "function": "Default everyday shampoo (non-wax; AM gym sweat).",
+      "function": "Mild Australian botanical shampoo — the everyday non-wax cleanse for gym mornings.",
       "evidence": "brand-claim",
       "technique": "With Muji scrubber, gentle circles.",
       "waitMinutes": 0,
-      "slots": ["am"],
+      "slots": [
+        "am"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": ["non-wax-gym-mornings"]
+      "conditions": [
+        "non-wax-gym-mornings"
+      ],
+      "leaveOn": "Lather about 30 seconds, then rinse."
     },
     {
       "id": "himawari-conditioner",
@@ -641,14 +931,18 @@
       "status": "active",
       "enabled": true,
       "format": "pump",
-      "function": "Default conditioner. Scalp-safe (rule updated 06/06/2026).",
+      "function": "Sunflower-lipid repair conditioner, scalp-safe (rule updated 06/06/2026) — smooths lengths without heavy silicone buildup at the roots.",
       "evidence": "brand-claim",
       "technique": "Squeeze excess water first, 1–2 min, rinse.",
       "waitMinutes": 0,
-      "slots": ["am", "pm"],
+      "slots": [
+        "am",
+        "pm"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": []
+      "conditions": [],
+      "leaveOn": "Leave 1–2 minutes, then rinse."
     },
     {
       "id": "batiste-dry-shampoo",
@@ -657,14 +951,19 @@
       "status": "situational",
       "enabled": true,
       "format": "aerosol",
-      "function": "True emergency only.",
+      "function": "Starch-based aerosol dry shampoo — soaks up sebum at the roots. True emergencies only: it masks, it doesn’t clean.",
       "evidence": "brand-claim",
       "technique": "Emergency use.",
       "waitMinutes": 0,
-      "slots": ["am"],
+      "slots": [
+        "am"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": ["emergency-only"]
+      "conditions": [
+        "emergency-only"
+      ],
+      "leaveOn": "Spray, massage in, brush out — no wait."
     },
     {
       "id": "dermaveen-conditioner",
@@ -674,14 +973,15 @@
       "enabled": false,
       "benchedReason": "Do not restock — redundant.",
       "format": "bottle",
-      "function": "Oatmeal conditioner.",
+      "function": "Colloidal-oatmeal conditioner for sensitive scalps. The Himawari covers this slot.",
       "evidence": "brand-claim",
       "technique": "",
       "waitMinutes": 0,
       "slots": [],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": []
+      "conditions": [],
+      "leaveOn": "Leave 1–2 minutes, then rinse."
     },
     {
       "id": "uevo-wax",
@@ -690,14 +990,22 @@
       "status": "active",
       "enabled": true,
       "format": "tub",
-      "function": "Office/formal styling.",
+      "function": "Matte dry wax for office/formal hold. Wax residue near the hairline is comedogenic — Maro shampoo is mandatory that night.",
       "evidence": "brand-claim",
       "technique": "Dry hair, after blowdry.",
       "waitMinutes": 0,
-      "slots": ["am"],
+      "slots": [
+        "am"
+      ],
       "activeTags": [],
-      "conflictTags": ["triggers-maro-shampoo-pm", "triggers-double-cleanse-consideration"],
-      "conditions": ["office-formal-days"]
+      "conflictTags": [
+        "triggers-maro-shampoo-pm",
+        "triggers-double-cleanse-consideration"
+      ],
+      "conditions": [
+        "office-formal-days"
+      ],
+      "leaveOn": "Stays in until washed out — Maro shampoo that night."
     },
     {
       "id": "brickell-sea-salt",
@@ -706,14 +1014,17 @@
       "status": "active",
       "enabled": true,
       "format": "spray",
-      "function": "Casual styling, or primer under wax.",
+      "function": "Sea-salt texturiser for casual days, or as a grip layer under wax.",
       "evidence": "brand-claim",
       "technique": "On damp hair.",
       "waitMinutes": 0,
-      "slots": ["am"],
+      "slots": [
+        "am"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": []
+      "conditions": [],
+      "leaveOn": "Air-dries in a couple of minutes."
     },
     {
       "id": "issey-fragrance",
@@ -722,14 +1033,22 @@
       "status": "active",
       "enabled": true,
       "format": "spray",
-      "function": "Office/formal fragrance.",
+      "function": "Woody-aquatic office/formal fragrance. Alcohol spray — pulse points only, never near treated facial skin.",
       "evidence": "brand-claim",
       "technique": "Pulse points, last step, dry skin. Never on face or SPF neck.",
       "waitMinutes": 0,
-      "slots": ["am"],
+      "slots": [
+        "am"
+      ],
       "activeTags": [],
-      "conflictTags": ["never-on-face-or-spf-neck"],
-      "conditions": ["office-formal-days", "absolute-last"]
+      "conflictTags": [
+        "never-on-face-or-spf-neck"
+      ],
+      "conditions": [
+        "office-formal-days",
+        "absolute-last"
+      ],
+      "leaveOn": "Spray and go — pulse points only."
     },
     {
       "id": "urbane-mess-spray",
@@ -739,14 +1058,15 @@
       "enabled": false,
       "benchedReason": "Do not restock — redundant with Brickell.",
       "format": "spray",
-      "function": "Salt spray.",
+      "function": "Sea-salt texturising spray — a duplicate of the Brickell.",
       "evidence": "brand-claim",
       "technique": "",
       "waitMinutes": 0,
       "slots": [],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": []
+      "conditions": [],
+      "leaveOn": "Air-dries in a couple of minutes."
     },
     {
       "id": "moilip",
@@ -755,14 +1075,20 @@
       "status": "active",
       "enabled": true,
       "format": "small tube",
-      "function": "Default home / no-SPF lip.",
+      "function": "Shiseido medicated lip repair: allantoin and glycyrrhetinic acid calm inflammation; panthenol, vitamin E and B6 support healing. For cracked or chapped lips, not just shine.",
       "evidence": "moderate",
       "technique": "Apply as needed.",
       "waitMinutes": 0,
-      "slots": ["am", "pm"],
+      "slots": [
+        "am",
+        "pm"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": ["home-default"]
+      "conditions": [
+        "home-default"
+      ],
+      "leaveOn": "Leave on; reapply as needed through the day."
     },
     {
       "id": "rohto-melty-lip",
@@ -775,10 +1101,17 @@
       "evidence": "moderate",
       "technique": "Apply before leaving, reapply outdoors.",
       "waitMinutes": 0,
-      "slots": ["am"],
-      "activeTags": ["spf"],
+      "slots": [
+        "am"
+      ],
+      "activeTags": [
+        "spf"
+      ],
       "conflictTags": [],
-      "conditions": ["outdoor-days"]
+      "conditions": [
+        "outdoor-days"
+      ],
+      "leaveOn": "Leave on; reapply when outdoors."
     },
     {
       "id": "yuskin-relip",
@@ -788,14 +1121,15 @@
       "enabled": false,
       "benchedReason": "Cut — redundant.",
       "format": "tube",
-      "function": "Lip treatment.",
+      "function": "Vitamin B2/E lip treatment for cracked lips. Moilip covers the medicated-lip slot.",
       "evidence": "brand-claim",
       "technique": "",
       "waitMinutes": 0,
       "slots": [],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": []
+      "conditions": [],
+      "leaveOn": "Leave on overnight."
     },
     {
       "id": "carmex",
@@ -805,14 +1139,15 @@
       "enabled": false,
       "benchedReason": "Cut — menthol-camphor is net-drying.",
       "format": "tube",
-      "function": "Lip balm.",
+      "function": "Classic menthol–camphor–salicylic lip balm. The tingle works against you: menthol and camphor are net-drying on already-dry lips.",
       "evidence": "brand-claim",
       "technique": "",
       "waitMinutes": 0,
       "slots": [],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": []
+      "conditions": [],
+      "leaveOn": "Leave on; reapply as needed."
     },
     {
       "id": "certain-dri-extra",
@@ -825,10 +1160,16 @@
       "evidence": "strong",
       "technique": "Gym-then-office days: after post-gym shower, before leaving. Non-gym office days: night before.",
       "waitMinutes": 0,
-      "slots": ["am", "pm"],
+      "slots": [
+        "am",
+        "pm"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": ["office-days"]
+      "conditions": [
+        "office-days"
+      ],
+      "leaveOn": "Let it dry 2–3 minutes before dressing or bed."
     },
     {
       "id": "rexona-advanced",
@@ -841,10 +1182,15 @@
       "evidence": "strong",
       "technique": "Apply AM.",
       "waitMinutes": 0,
-      "slots": ["am"],
+      "slots": [
+        "am"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": ["gym-mornings-and-weekends"]
+      "conditions": [
+        "gym-mornings-and-weekends"
+      ],
+      "leaveOn": "Let it dry about a minute before dressing."
     },
     {
       "id": "rexona-clinical-spray",
@@ -854,14 +1200,15 @@
       "enabled": false,
       "benchedReason": "Not currently used (situational shelf).",
       "format": "aerosol",
-      "function": "Clinical-strength spray.",
+      "function": "Clinical-strength aerosol antiperspirant, held in reserve for big days.",
       "evidence": "strong",
       "technique": "",
       "waitMinutes": 0,
       "slots": [],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": []
+      "conditions": [],
+      "leaveOn": "Dries in seconds."
     },
     {
       "id": "certain-dri-prescription",
@@ -871,14 +1218,15 @@
       "enabled": false,
       "benchedReason": "Permanently excluded — armpit irritation.",
       "format": "roll-on",
-      "function": "Prescription-strength antiperspirant.",
+      "function": "Aluminium-chloride clinical antiperspirant — the strongest OTC option, but it irritated the skin. Extra Strength is the ceiling.",
       "evidence": "strong",
       "technique": "",
       "waitMinutes": 0,
       "slots": [],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": []
+      "conditions": [],
+      "leaveOn": "Let it dry fully before bed."
     },
     {
       "id": "ag-deo-stick",
@@ -888,14 +1236,15 @@
       "enabled": false,
       "benchedReason": "Patch test pending — enable after clearing.",
       "format": "stick",
-      "function": "Deodorant stick.",
+      "function": "Japanese silver-ion (Ag+) deodorant stick — waiting on a patch test before it earns a place.",
       "evidence": "brand-claim",
       "technique": "",
       "waitMinutes": 0,
       "slots": [],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": []
+      "conditions": [],
+      "leaveOn": "Goes on dry — no wait."
     },
     {
       "id": "dermaveen-body",
@@ -908,10 +1257,16 @@
       "evidence": "moderate",
       "technique": "Apply to dry areas post-shower.",
       "waitMinutes": 0,
-      "slots": ["am", "pm"],
+      "slots": [
+        "am",
+        "pm"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": ["winter-dry-body"]
+      "conditions": [
+        "winter-dry-body"
+      ],
+      "leaveOn": "Rubs in within a minute."
     },
     {
       "id": "curel-hand-cream",
@@ -924,10 +1279,16 @@
       "evidence": "moderate",
       "technique": "As needed.",
       "waitMinutes": 0,
-      "slots": ["am", "pm"],
+      "slots": [
+        "am",
+        "pm"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": ["winter-dry-hands"]
+      "conditions": [
+        "winter-dry-hands"
+      ],
+      "leaveOn": "Rubs in within a minute."
     },
     {
       "id": "braun-series-7",
@@ -940,10 +1301,17 @@
       "evidence": "n/a",
       "technique": "Clean dry skin, BEFORE any skincare product.",
       "waitMinutes": 0,
-      "slots": ["am"],
+      "slots": [
+        "am"
+      ],
       "activeTags": [],
-      "conflictTags": ["shave-before-all-skincare"],
-      "conditions": ["office-outing-days"]
+      "conflictTags": [
+        "shave-before-all-skincare"
+      ],
+      "conditions": [
+        "office-outing-days"
+      ],
+      "leaveOn": "n/a — tool."
     },
     {
       "id": "muji-scalp-scrubber",
@@ -956,10 +1324,14 @@
       "evidence": "n/a",
       "technique": "Gentle circles.",
       "waitMinutes": 0,
-      "slots": ["am", "pm"],
+      "slots": [
+        "am",
+        "pm"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": []
+      "conditions": [],
+      "leaveOn": "n/a — tool."
     },
     {
       "id": "body-scrubber",
@@ -972,10 +1344,14 @@
       "evidence": "n/a",
       "technique": "Daily, back.",
       "waitMinutes": 0,
-      "slots": ["am", "pm"],
+      "slots": [
+        "am",
+        "pm"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": []
+      "conditions": [],
+      "leaveOn": "n/a — tool."
     },
     {
       "id": "remington-dryer",
@@ -988,10 +1364,15 @@
       "evidence": "n/a",
       "technique": "Medium heat only.",
       "waitMinutes": 0,
-      "slots": ["am"],
+      "slots": [
+        "am"
+      ],
       "activeTags": [],
       "conflictTags": [],
-      "conditions": ["medium-heat-only"]
+      "conditions": [
+        "medium-heat-only"
+      ],
+      "leaveOn": "n/a — tool."
     }
   ]
 }

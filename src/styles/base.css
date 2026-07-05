@@ -282,6 +282,11 @@ button {
   font-size: 13px;
   margin-top: 2px;
 }
+.leave-on {
+  color: var(--text-2);
+  font-size: 13px;
+  margin-top: 4px;
+}
 
 .advisory {
   background: var(--surface-2);
@@ -666,7 +671,9 @@ button {
   left: 0;
   right: 0;
   height: var(--safe-top);
-  background: var(--bg);
+  background: color-mix(in srgb, var(--bg) 62%, transparent);
+  backdrop-filter: blur(18px) saturate(1.5);
+  -webkit-backdrop-filter: blur(18px) saturate(1.5);
   z-index: 25;
 }
 

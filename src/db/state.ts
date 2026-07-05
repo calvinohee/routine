@@ -19,10 +19,27 @@ import { seedSessions, seedSettings } from '../engine/seed'
 import productsJson from '../../products.json'
 import type { RoutineDb } from './db'
 
-/** Seed on first launch only: products verbatim, Section 11 settings, one historical session. */
+/**
+ * Keeps the product catalogue (names, summaries, techniques, leave-on text)
+ * in step with the app version while preserving the user's enable toggles.
+ */
+export async function syncProductCatalog(db: RoutineDb): Promise<void> {
+  await db.transaction('rw', db.products, async () => {
+    for (const product of productsJson.products as Product[]) {
+      const existing = await db.products.get(product.id)
+      if (existing) await db.products.put({ ...product, enabled: existing.enabled })
+      else await db.products.add(product)
+    }
+  })
+}
+
+/** Seed on first launch; afterwards, refresh the catalogue text on every boot. */
 export async function seedIfNeeded(db: RoutineDb): Promise<void> {
   const count = await db.products.count()
-  if (count > 0) return
+  if (count > 0) {
+    await syncProductCatalog(db)
+    return
+  }
   await db.transaction('rw', [db.products, db.settings, db.sessions, db.adapalenePhaseHistory], async () => {
     await db.products.bulkAdd(productsJson.products as Product[])
     await db.settings.add({ id: 'singleton', value: seedSettings() })

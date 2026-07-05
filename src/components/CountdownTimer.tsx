@@ -1,12 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
 
-const STORAGE_KEY = 'regimen-wait-timer'
 /** How long a finished timer keeps showing "Done" before resetting. */
 const DONE_LINGER_MS = 60 * 60 * 1000
 
-function storedEndsAt(): number | null {
+function format(totalSeconds: number): string {
+  const mm = Math.floor(totalSeconds / 60)
+  const ss = String(Math.round(totalSeconds % 60)).padStart(2, '0')
+  return `${mm}:${ss}`
+}
+
+function storedEndsAt(key: string): number | null {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
+    const raw = localStorage.getItem(key)
     return raw ? Number(raw) : null
   } catch {
     return null
@@ -14,18 +19,24 @@ function storedEndsAt(): number | null {
 }
 
 /**
- * Tappable countdown for the BHA wait step. The end time is persisted, so the
- * countdown survives switching tabs and even relaunching the app mid-wait.
+ * Tappable countdown for any timed step. The end time is persisted per step,
+ * so a running timer survives switching tabs and relaunching the app.
  */
-export function CountdownTimer({ minutes }: { minutes: number }) {
+export function CountdownTimer({
+  minutes,
+  storageKey = 'regimen-timer-wait',
+}: {
+  minutes: number
+  storageKey?: string
+}) {
   const [remaining, setRemaining] = useState<number | null>(() => {
-    const endsAt = storedEndsAt()
+    const endsAt = storedEndsAt(storageKey)
     if (endsAt === null) return null
     const left = Math.ceil((endsAt - Date.now()) / 1000)
     if (left > 0) return left
     if (Date.now() - endsAt < DONE_LINGER_MS) return 0
     try {
-      localStorage.removeItem(STORAGE_KEY)
+      localStorage.removeItem(storageKey)
     } catch {
       /* storage unavailable — timer just won't persist */
     }
@@ -34,7 +45,7 @@ export function CountdownTimer({ minutes }: { minutes: number }) {
   const interval = useRef<ReturnType<typeof setInterval> | null>(null)
 
   function tick() {
-    const endsAt = storedEndsAt()
+    const endsAt = storedEndsAt(storageKey)
     if (endsAt === null) return
     const left = Math.ceil((endsAt - Date.now()) / 1000)
     if (left <= 0) {
@@ -57,13 +68,13 @@ export function CountdownTimer({ minutes }: { minutes: number }) {
   }, [])
 
   function start() {
-    const endsAt = Date.now() + minutes * 60 * 1000
+    const seconds = Math.round(minutes * 60)
     try {
-      localStorage.setItem(STORAGE_KEY, String(endsAt))
+      localStorage.setItem(storageKey, String(Date.now() + seconds * 1000))
     } catch {
       /* storage unavailable — timer just won't persist */
     }
-    setRemaining(minutes * 60)
+    setRemaining(seconds)
     if (interval.current) clearInterval(interval.current)
     interval.current = setInterval(tick, 1000)
   }
@@ -71,18 +82,16 @@ export function CountdownTimer({ minutes }: { minutes: number }) {
   if (remaining === null) {
     return (
       <button className="chip small countdown" onClick={start}>
-        Start {minutes}:00 timer
+        Start {format(minutes * 60)} timer
       </button>
     )
   }
   if (remaining === 0) {
-    return <span className="countdown">Done — next layer ✓</span>
+    return <span className="countdown">Done ✓</span>
   }
-  const mm = Math.floor(remaining / 60)
-  const ss = String(remaining % 60).padStart(2, '0')
   return (
     <span className="countdown" aria-live="off">
-      {mm}:{ss}
+      {format(remaining)}
     </span>
   )
 }

@@ -86,3 +86,20 @@ describe('generate → log round trip', () => {
     expect(await db.sessions.where('date').equals('2026-07-07').count()).toBe(1)
   })
 })
+
+describe('syncProductCatalog', () => {
+  test('boot refreshes catalogue text but preserves enable toggles', async () => {
+    // Simulate an older install: stale text, user turned Centella off.
+    await db.products.update('skin1004-centella', { function: 'stale text', enabled: false })
+    await seedIfNeeded(db) // second boot → sync path
+    const centella = await db.products.get('skin1004-centella')
+    expect(centella?.function).not.toBe('stale text')
+    expect(centella?.enabled).toBe(false)
+  })
+
+  test('every product carries leave-on guidance after sync', async () => {
+    await seedIfNeeded(db)
+    const products = await db.products.toArray()
+    expect(products.every((p) => typeof p.leaveOn === 'string' && p.leaveOn.length > 0)).toBe(true)
+  })
+})

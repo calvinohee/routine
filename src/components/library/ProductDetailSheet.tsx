@@ -15,11 +15,14 @@ export function ProductDetailSheet({ product, onClose }: { product: Product; onC
         <div className="chips" style={{ marginTop: 10 }}>
           <span className="chip small readonly">evidence: {product.evidence}</span>
           <span className="chip small readonly">
-            {product.slots.length > 0 ? product.slots.join(' + ').toUpperCase() : 'benched'}
+            {product.slots.length > 0 ? product.slots.join(' + ').toUpperCase() : 'not in rotation'}
           </span>
           {product.waitMinutes > 0 && (
             <span className="chip small readonly">wait {product.waitMinutes} min</span>
           )}
+        </div>
+        <div className="leave-on" style={{ marginTop: 8 }}>
+          ⏱ {product.leaveOn}
         </div>
       </div>
 
@@ -53,9 +56,7 @@ export function ProductDetailSheet({ product, onClose }: { product: Product; onC
         </div>
       )}
 
-      {product.benchedReason && (
-        <div className="advisory">Benched: {product.benchedReason}</div>
-      )}
+      {product.benchedReason && <div className="advisory">Note: {product.benchedReason}</div>}
 
       <button className="primary-btn secondary" onClick={onClose}>
         Close

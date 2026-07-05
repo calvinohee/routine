@@ -12,8 +12,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       manifest: {
-        name: 'ROUTINE',
-        short_name: 'ROUTINE',
+        name: 'Regimen',
+        short_name: 'Regimen',
         description: 'Rules-driven skincare routine generator and tracker',
         theme_color: '#00C2CB',
         background_color: '#f2f2f7',

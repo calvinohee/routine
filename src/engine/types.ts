@@ -1,5 +1,5 @@
 /**
- * Domain model for the ROUTINE rules engine.
+ * Domain model for the Regimen rules engine.
  * Pure types only — no framework imports, no runtime code beyond const arrays
  * used as single sources of truth for unions.
  */

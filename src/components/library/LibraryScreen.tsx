@@ -65,7 +65,7 @@ export function LibraryScreen() {
   }
 
   return (
-    <div>
+    <div className="screen">
       <h1 className="large-title">Library</h1>
       <p className="title-sub">Your roster and the dials behind the engine.</p>
 

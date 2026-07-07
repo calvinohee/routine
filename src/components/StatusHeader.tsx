@@ -4,7 +4,28 @@ import { quotaCounts } from '../engine/quotas'
 import { diffDays } from '../engine/dates'
 import type { IsoDate } from '../engine/types'
 import { PHASE_LABELS } from '../lib/labels'
+import { useOnline } from '../hooks/useOnline'
 
+function sydneyTime(iso: string): string {
+  return new Date(iso).toLocaleTimeString('en-AU', {
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZone: 'Australia/Sydney',
+  })
+}
+
+/** The weather status line, with an offline notice when connectivity is down. */
+export function weatherLine(weather: WeatherSnapshot | null, online: boolean): string {
+  if (!weather) {
+    return online
+      ? 'Weather unavailable — routines run fine without it.'
+      : 'Offline — routines run fine without weather.'
+  }
+  const summary = `${Math.round(weather.tempC)}°C · ${Math.round(weather.humidityPct)}% humidity · UV ${weather.uvIndex.toFixed(0)} · ${weather.conditions}`
+  return online
+    ? `${summary} · fetched ${sydneyTime(weather.fetchedAt)}`
+    : `Offline · showing weather from ${sydneyTime(weather.fetchedAt)}`
+}
 
 interface Props {
   date: IsoDate
@@ -14,6 +35,7 @@ interface Props {
 }
 
 export function StatusHeader({ date, settings, history, weather }: Props) {
+  const online = useOnline()
   const counts = quotaCounts(history, date)
   const { adapalene } = settings
   const dayCount = diffDays(adapalene.phaseStart, date) + 1
@@ -48,11 +70,7 @@ export function StatusHeader({ date, settings, history, weather }: Props) {
           </span>
         ))}
       </div>
-      <div className="weather-line">
-        {weather
-          ? `${Math.round(weather.tempC)}°C · ${Math.round(weather.humidityPct)}% humidity · UV ${weather.uvIndex.toFixed(0)} · ${weather.conditions} · fetched ${new Date(weather.fetchedAt).toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit', timeZone: 'Australia/Sydney' })}`
-          : 'Weather unavailable — routines run fine without it.'}
-      </div>
+      <div className="weather-line">{weatherLine(weather, online)}</div>
     </div>
   )
 }

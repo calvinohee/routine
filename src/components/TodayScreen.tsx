@@ -94,7 +94,7 @@ export function TodayScreen() {
   const alreadyLogged = loggedSession !== undefined && !justLogged && result === null
 
   return (
-    <div>
+    <div className="screen">
       <h1 className="large-title">Today</h1>
       <p className="title-sub">
         {new Date(`${date}T12:00:00`).toLocaleDateString('en-AU', {

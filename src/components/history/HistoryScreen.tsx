@@ -43,7 +43,7 @@ export function HistoryScreen() {
   const rollups = weeklyRollups(older)
 
   return (
-    <div>
+    <div className="screen">
       <h1 className="large-title">History</h1>
       <p className="title-sub">Kept forever — PIH fades slowly, receipts help.</p>
 

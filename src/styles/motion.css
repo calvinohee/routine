@@ -1,0 +1,150 @@
+/* Motion layer — subtle, native-feeling. All of it is disabled under
+   prefers-reduced-motion by the block at the foot of this file. */
+
+/* Screen entrance — each tab fades/rises in when it first mounts. */
+.screen {
+  animation: screen-in 0.28s cubic-bezier(0.32, 0.72, 0.25, 1) both;
+}
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stagger for lists that render on mount (routine steps, history/library cards). */
+.stagger > * {
+  animation: item-in 0.34s cubic-bezier(0.32, 0.72, 0.25, 1) both;
+}
+.stagger > *:nth-child(1) {
+  animation-delay: 0.02s;
+}
+.stagger > *:nth-child(2) {
+  animation-delay: 0.06s;
+}
+.stagger > *:nth-child(3) {
+  animation-delay: 0.1s;
+}
+.stagger > *:nth-child(4) {
+  animation-delay: 0.14s;
+}
+.stagger > *:nth-child(5) {
+  animation-delay: 0.18s;
+}
+.stagger > *:nth-child(n + 6) {
+  animation-delay: 0.22s;
+}
+@keyframes item-in {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Press feedback — the closest a web PWA gets to a tap "click" on iOS,
+   which exposes no Vibration API. Quick scale on the interactive surfaces. */
+.chip:active,
+.option-row:active,
+.conflict-option:active,
+.tab-btn:active,
+.primary-btn:active,
+.product-main:active,
+.stepper button:active {
+  transform: scale(0.96);
+}
+.chip,
+.option-row,
+.conflict-option,
+.tab-btn,
+.product-main,
+.stepper button {
+  transition: transform 0.08s ease;
+}
+
+/* Update toast — slides up from above the tab bar. */
+.update-toast {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.22);
+  border: 0.5px solid var(--separator);
+  max-width: 536px;
+  margin: 0 auto;
+  animation: toast-in 0.34s cubic-bezier(0.32, 0.72, 0.25, 1) both;
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.update-toast-text {
+  font-size: 15px;
+  font-weight: 550;
+}
+.update-toast-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+.update-toast-later {
+  color: var(--text-2);
+  font-size: 15px;
+  padding: 6px 10px;
+  min-height: 0;
+}
+.update-toast-reload {
+  color: #00363a;
+  background: var(--accent);
+  font-weight: 700;
+  font-size: 15px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  min-height: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen,
+  .stagger > *,
+  .update-toast {
+    animation: none;
+  }
+  .chip,
+  .option-row,
+  .conflict-option,
+  .tab-btn,
+  .product-main,
+  .stepper button,
+  .chip:active,
+  .option-row:active,
+  .conflict-option:active,
+  .tab-btn:active,
+  .primary-btn:active,
+  .product-main:active,
+  .stepper button:active {
+    transition: none;
+    transform: none;
+  }
+}

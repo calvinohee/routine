@@ -30,6 +30,7 @@ export function RoutineView({ routine, logged, onLog }: Props) {
 
       <div className="card">
         <h3>Steps</h3>
+        <div className="stagger">
         {routine.steps.map((step, i) => {
           // The BHA wait renders as its own timed step — don't double up.
           const nextIsWait = routine.steps[i + 1]?.kind === 'wait'
@@ -55,6 +56,7 @@ export function RoutineView({ routine, logged, onLog }: Props) {
           </div>
           )
         })}
+        </div>
       </div>
 
       {logged ? (

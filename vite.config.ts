@@ -8,8 +8,9 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      // Silent auto-update in P1; the "Update available" toast arrives in P4.
-      registerType: 'autoUpdate',
+      // Prompt mode: a new version surfaces an "Update available" toast the
+      // user taps to reload, instead of silently swapping on next launch.
+      registerType: 'prompt',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       manifest: {
         name: 'Regimen',
@@ -36,6 +37,8 @@ export default defineConfig({
         // Precache the whole app shell; weather is the only network call and
         // has its own cache — the app must work with zero network.
         globPatterns: ['**/*.{js,css,html,svg,png,json}'],
+        // iOS loads splash images at launch (before the SW); no need to precache them.
+        globIgnores: ['**/splash-*.png'],
         navigateFallback: '/routine/index.html',
       },
     }),

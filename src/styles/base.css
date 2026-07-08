@@ -137,21 +137,26 @@ button {
   color: var(--text);
 }
 
-/* Sheet modal */
+/* Sheet modal. The sheet is pinned to the bottom with fixed positioning —
+   NOT flex-aligned. A bottom-aligned flex item that outgrows its container
+   clips its own top unreachably on iOS, which is exactly what happened once
+   the questionnaire grew taller than the cap. */
 .sheet-backdrop {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.42);
   z-index: 30;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
 }
 .sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
   background: var(--surface);
   width: 100%;
   max-width: 560px;
-  max-height: 88dvh;
+  max-height: 85svh;
   overflow-y: auto;
   border-radius: 18px 18px 0 0;
   padding: 10px 16px calc(20px + env(safe-area-inset-bottom));

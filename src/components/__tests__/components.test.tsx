@@ -294,3 +294,20 @@ describe('useToday time handling', () => {
     expect(defaultSlot(eveningSydney)).toBe('pm')
   })
 })
+
+describe('Sheet anchoring', () => {
+  test('sheets portal to <body> so animated ancestors can never displace them', () => {
+    render(
+      <QuestionnaireSheet
+        slot="pm"
+        date={MONDAY}
+        settings={makeSettings()}
+        activeSpots={[]}
+        onSubmit={() => undefined}
+        onClose={() => undefined}
+      />,
+    )
+    const backdrop = document.querySelector('.sheet-backdrop')
+    expect(backdrop?.parentElement).toBe(document.body)
+  })
+})

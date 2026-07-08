@@ -1,7 +1,13 @@
 import type { ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 
+/**
+ * Bottom sheet. Rendered through a portal to <body> so it always anchors to
+ * the viewport — an animated (transformed) ancestor would otherwise capture
+ * position: fixed and pin the sheet to the scrolled page instead.
+ */
 export function Sheet({ children, onClose }: { children: ReactNode; onClose?: () => void }) {
-  return (
+  return createPortal(
     <div
       className="sheet-backdrop"
       onClick={(e) => {
@@ -12,6 +18,7 @@ export function Sheet({ children, onClose }: { children: ReactNode; onClose?: ()
         <div className="sheet-grabber" />
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }

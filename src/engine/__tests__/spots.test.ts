@@ -218,3 +218,12 @@ describe('re-logging the same evening is idempotent', () => {
     ])
   })
 })
+
+describe('updates never overwrite escalation states', () => {
+  test('a spot in Benzac mode keeps its state when updated', () => {
+    const s = spot({ state: 'benzac' })
+    const result = applySpotAnswers([s], pmAnswers({ spotUpdates: [{ spotId: s.id, status: 'better' }] }), TODAY)
+    expect(result[0]?.state).toBe('benzac')
+    expect(result[0]?.updates).toEqual([{ date: TODAY, status: 'better' }])
+  })
+})

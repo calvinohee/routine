@@ -103,3 +103,26 @@ describe('syncProductCatalog', () => {
     expect(products.every((p) => typeof p.leaveOn === 'string' && p.leaveOn.length > 0)).toBe(true)
   })
 })
+
+describe('redo semantics', () => {
+  test('regenerating excludes the already-logged session for that date+slot', async () => {
+    const answers = pmAnswers()
+    const input1 = await buildEngineInput(db, '2026-07-07', 'pm', answers, null, [])
+    const result1 = generateRoutine(input1)
+    await logSession(db, {
+      date: '2026-07-07',
+      slot: 'pm',
+      answers,
+      routine: result1.routine!,
+      updatedSpots: result1.updatedSpots,
+      appliedEffects: result1.appliedEffects,
+      conflictChoices: [],
+      weather: null,
+    })
+    // Redo: the engine must see the world as it was BEFORE tonight's log.
+    const input2 = await buildEngineInput(db, '2026-07-07', 'pm', answers, null, [])
+    expect(input2.history.some((s) => s.date === '2026-07-07' && s.slot === 'pm')).toBe(false)
+    // Same inputs → same decision (cold-start Tuesday → adapalene again).
+    expect(generateRoutine(input2).routine?.nightType).toBe(result1.routine?.nightType)
+  })
+})

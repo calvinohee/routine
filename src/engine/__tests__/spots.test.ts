@@ -190,3 +190,31 @@ describe('coverage of remaining paths', () => {
     expect(applySpotAnswers([s], answers, TODAY)[0]?.state).toBe('active')
   })
 })
+
+describe('re-logging the same evening is idempotent', () => {
+  test('a same-date update replaces the earlier one instead of stacking', () => {
+    const s = spot()
+    const first = applySpotAnswers([s], pmAnswers({ spotUpdates: [{ spotId: s.id, status: 'better' }] }), TODAY)
+    const second = applySpotAnswers(first, pmAnswers({ spotUpdates: [{ spotId: s.id, status: 'better' }] }), TODAY)
+    expect(second[0]?.updates).toEqual([{ date: TODAY, status: 'better' }])
+    expect(second[0]?.state).toBe('active') // one real "better", not two
+  })
+
+  test('genuine consecutive-day betters still heal', () => {
+    const s = spot({ updates: [{ date: '2026-07-03', status: 'better' }] })
+    const result = applySpotAnswers([s], pmAnswers({ spotUpdates: [{ spotId: s.id, status: 'better' }] }), TODAY)
+    expect(result[0]?.state).toBe('healed')
+  })
+
+  test('correcting a same-date better to same un-heals the spot', () => {
+    const s = spot({ updates: [{ date: '2026-07-03', status: 'better' }] })
+    const healed = applySpotAnswers([s], pmAnswers({ spotUpdates: [{ spotId: s.id, status: 'better' }] }), TODAY)
+    expect(healed[0]?.state).toBe('healed')
+    const corrected = applySpotAnswers(healed, pmAnswers({ spotUpdates: [{ spotId: s.id, status: 'same' }] }), TODAY)
+    expect(corrected[0]?.state).toBe('active')
+    expect(corrected[0]?.updates).toEqual([
+      { date: '2026-07-03', status: 'better' },
+      { date: TODAY, status: 'same' },
+    ])
+  })
+})

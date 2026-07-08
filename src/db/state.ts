@@ -16,6 +16,7 @@ import type {
   ConflictChoiceLog,
 } from '../engine/types'
 import { seedSessions, seedSettings } from '../engine/seed'
+import { lastDateOfNightType } from '../engine/quotas'
 import productsJson from '../../products.json'
 import type { RoutineDb } from './db'
 
@@ -71,13 +72,39 @@ export async function buildEngineInput(
   weather: WeatherSnapshot | null,
   conflictChoices: ConflictChoiceLog[],
 ): Promise<EngineInput> {
-  const [settings, products, history, spots] = await Promise.all([
+  const [settings, products, allSessions, spots] = await Promise.all([
     getSettings(db),
     db.products.toArray(),
     db.sessions.toArray(),
     db.spots.toArray(),
   ])
-  return { date, slot, settings, products, history, spots, answers, weather, conflictChoices }
+  // The engine must see the world as it was BEFORE this session: when
+  // redoing a check-in, tonight's earlier log must not count as history,
+  // and adapalene dates that log wrote must be rolled back too.
+  const history = allSessions.filter((s) => !(s.date === date && s.slot === slot))
+  let effectiveSettings = settings
+  if (settings.adapalene.lastApplication === date) {
+    effectiveSettings = {
+      ...settings,
+      adapalene: {
+        ...settings.adapalene,
+        lastApplication: lastDateOfNightType(history, 'adapalene'),
+        firstFullFace:
+          settings.adapalene.firstFullFace === date ? null : settings.adapalene.firstFullFace,
+      },
+    }
+  }
+  return {
+    date,
+    slot,
+    settings: effectiveSettings,
+    products,
+    history,
+    spots,
+    answers,
+    weather,
+    conflictChoices,
+  }
 }
 
 /**

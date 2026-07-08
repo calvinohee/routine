@@ -45,10 +45,14 @@ export function applySpotAnswers(spots: Spot[], answers: Answers, date: IsoDate)
   for (const update of updates) {
     const target = result.find((s) => s.id === update.spotId)
     if (!target) continue
+    // Re-logging the same evening replaces that day's update (idempotent),
+    // so a redo can never stack two same-day "better"s into a false heal.
+    target.updates = target.updates.filter((u) => u.date !== date)
     const previous = target.updates[target.updates.length - 1]
     target.updates.push({ date, status: update.status })
-    if (update.status === 'better' && previous?.status === 'better') {
-      target.state = 'healed'
+    if (target.state === 'active' || target.state === 'healed') {
+      target.state =
+        update.status === 'better' && previous?.status === 'better' ? 'healed' : 'active'
     }
   }
 

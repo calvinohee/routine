@@ -5,6 +5,7 @@ import { QuestionnaireSheet } from '../QuestionnaireSheet'
 import { ConflictCards } from '../ConflictCards'
 import { CountdownTimer } from '../CountdownTimer'
 import { RoutineView } from '../RoutineView'
+import { defaultSlot, sydneyHour } from '../../hooks/useToday'
 import { makeSettings } from '../../engine/__tests__/fixtures'
 import type { Answers, ConflictSet } from '../../engine/types'
 
@@ -276,5 +277,20 @@ describe('RoutineView timers and leave-on remarks', () => {
       />,
     )
     expect(screen.getByRole('button', { name: 'Start 1:30 timer' })).toBeInTheDocument()
+  })
+})
+
+describe('useToday time handling', () => {
+  test('midnight in Sydney is hour 0, defaulting to the morning slot', () => {
+    // 14:00 UTC == 00:00 AEST (winter, UTC+10).
+    const midnightSydney = new Date('2026-07-06T14:00:00Z')
+    expect(sydneyHour(midnightSydney)).toBe(0)
+    expect(defaultSlot(midnightSydney)).toBe('am')
+  })
+
+  test('evening hours default to the PM slot', () => {
+    const eveningSydney = new Date('2026-07-06T09:00:00Z') // 19:00 AEST
+    expect(sydneyHour(eveningSydney)).toBe(19)
+    expect(defaultSlot(eveningSydney)).toBe('pm')
   })
 })

@@ -43,15 +43,16 @@ export function TodayScreen() {
     return () => {
       cancelled = true
     }
-  }, [settings?.coordinates.lat, settings?.coordinates.lon, settings === undefined])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settings?.coordinates.lat, settings?.coordinates.lon, settings === undefined, date])
 
-  // Reset the flow when switching slot.
+  // Reset the flow when switching slot or when the day rolls over.
   useEffect(() => {
     setAnswers(null)
     setChoices([])
     setResult(null)
     setJustLogged(false)
-  }, [slot])
+  }, [slot, date])
 
   async function runEngine(nextAnswers: Answers, nextChoices: ConflictChoiceLog[]) {
     const input = await buildEngineInput(db, date, slot, nextAnswers, weather, nextChoices)

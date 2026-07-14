@@ -5,6 +5,11 @@ import { VitePWA } from 'vite-plugin-pwa'
 // https://vite.dev/config/
 export default defineConfig({
   base: '/routine/',
+  build: {
+    // esbuild keeps both backdrop-filter declarations; the default minifier
+    // collapses the pair to -webkit- only, which Chromium ignores.
+    cssMinify: 'esbuild',
+  },
   plugins: [
     react(),
     VitePWA({

@@ -722,7 +722,9 @@ button {
    (older installs), assume a standard status-bar height so nothing collides. */
 @media all and (display-mode: standalone) {
   :root {
-    --safe-top: max(env(safe-area-inset-top, 0px), 54px);
+    /* Clamped: iOS can report an inset far taller than the Dynamic Island;
+       the blur strip must end at the island's bottom edge (~59pt). */
+    --safe-top: min(max(env(safe-area-inset-top, 0px), 54px), 62px);
   }
 }
 

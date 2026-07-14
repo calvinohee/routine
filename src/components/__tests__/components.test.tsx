@@ -9,7 +9,7 @@ import { defaultSlot, sydneyHour } from '../../hooks/useToday'
 import { makeSettings } from '../../engine/__tests__/fixtures'
 import type { Answers, ConflictSet } from '../../engine/types'
 
-const MONDAY = '2026-07-06' // gym-office in the seed schedule
+const MONDAY = '2026-07-06' // office in the seed schedule
 
 describe('QuestionnaireSheet — AM flow', () => {
   test('day type is pre-selected from the weekly schedule; one tap path works', async () => {
@@ -26,7 +26,11 @@ describe('QuestionnaireSheet — AM flow', () => {
       />,
     )
 
-    expect(screen.getByRole('button', { name: 'Gym + office' })).toHaveClass('selected')
+    expect(screen.getByRole('button', { name: 'Office' })).toHaveClass('selected')
+    // Gym + office is retired — the shower question replaced it.
+    expect(screen.queryByRole('button', { name: 'Gym + office' })).toBeNull()
+    expect(screen.getByText('Morning shower?')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Yes' })).toHaveClass('selected')
     // Adapalene question appears while phase < established.
     expect(screen.getByText(/Adapalene site overnight/)).toBeDefined()
 
@@ -35,11 +39,30 @@ describe('QuestionnaireSheet — AM flow', () => {
     const answers = onSubmit.mock.calls[0]?.[0]
     expect(answers).toMatchObject({
       slot: 'am',
-      dayType: 'gym-office',
+      dayType: 'office',
+      amShower: true,
       skinStates: ['clear'],
       patches: 'none',
       adapaleneReport: 'looked-fine',
     })
+  })
+
+  test('answering No to the shower carries through', async () => {
+    const user = userEvent.setup()
+    const onSubmit = vi.fn<(a: Answers) => void>()
+    render(
+      <QuestionnaireSheet
+        slot="am"
+        date={MONDAY}
+        settings={makeSettings()}
+        activeSpots={[]}
+        onSubmit={onSubmit}
+        onClose={() => undefined}
+      />,
+    )
+    await user.click(screen.getByRole('button', { name: 'No' }))
+    await user.click(screen.getByRole('button', { name: 'Build my routine' }))
+    expect(onSubmit.mock.calls[0]?.[0]).toMatchObject({ amShower: false })
   })
 
   test('selecting new spot opens the zone picker inline and reports the zone', async () => {

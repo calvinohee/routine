@@ -34,11 +34,27 @@ export async function syncProductCatalog(db: RoutineDb): Promise<void> {
   })
 }
 
+/** One-off data migrations for existing installs. */
+export async function migrateSettings(db: RoutineDb): Promise<void> {
+  const settings = await getSettings(db)
+  let changed = false
+  const weeklySchedule = { ...settings.weeklySchedule }
+  for (const day of Object.keys(weeklySchedule) as Array<keyof typeof weeklySchedule>) {
+    // 'gym-office' was retired in favour of the morning-shower question.
+    if (weeklySchedule[day] === 'gym-office') {
+      weeklySchedule[day] = 'office'
+      changed = true
+    }
+  }
+  if (changed) await putSettings(db, { ...settings, weeklySchedule })
+}
+
 /** Seed on first launch; afterwards, refresh the catalogue text on every boot. */
 export async function seedIfNeeded(db: RoutineDb): Promise<void> {
   const count = await db.products.count()
   if (count > 0) {
     await syncProductCatalog(db)
+    await migrateSettings(db)
     return
   }
   await db.transaction('rw', [db.products, db.settings, db.sessions, db.adapalenePhaseHistory], async () => {

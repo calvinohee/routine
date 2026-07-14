@@ -198,10 +198,14 @@ function buildAm(ctx: SequenceContext, answers: AmAnswers): ResolvedRoutine {
   if (dayType === 'office' || dayType === 'gym-office' || dayType === 'outdoor') {
     b.adviseIf('braun-series-7', 'Shave first (Braun) on clean dry skin, before any skincare.')
   }
-  if (dayType === 'gym-office') {
-    b.adviseIf('cerave-sa-cleanser', 'Gym: CeraVe SA cleanser in the gym shower (1–2 pumps, wet skin, rinse).')
+  // Morning shower drives the in-shower guidance (legacy gym-office implied one).
+  const showered = answers.amShower ?? dayType === 'gym-office'
+  if (showered) {
+    b.adviseIf('cerave-sa-cleanser', 'Shower: CeraVe SA cleanser in the morning shower (1–2 pumps, wet skin, rinse).')
     b.adviseIf('sukin-shampoo', 'Hair: Sukin shampoo with the Muji scrubber, then Himawari conditioner.')
-    b.adviseIf('certain-dri-extra', 'Certain Dri after the post-gym shower, before leaving.')
+    if (dayType === 'office' || dayType === 'gym-office') {
+      b.adviseIf('certain-dri-extra', 'Certain Dri after the shower, before leaving.')
+    }
   }
   if (dayType === 'office' || dayType === 'gym-office') {
     b.adviseIf('uevo-wax', 'Style: Uevo wax on dry hair after blowdry (medium heat only).')
@@ -215,7 +219,7 @@ function buildAm(ctx: SequenceContext, answers: AmAnswers): ResolvedRoutine {
       b.advise('PM run planned: do tonight’s routine after the run.')
   }
   const weekday = weekdayOf(ctx.date)
-  if (weekday === 'saturday' || weekday === 'sunday' || dayType === 'gym-office') {
+  if (weekday === 'saturday' || weekday === 'sunday' || showered) {
     b.adviseIf('rexona-advanced', 'Deodorant: Rexona roll-on this morning.')
   }
   if (dayType === 'wfh' || dayType === 'rest-indoors') {
@@ -382,7 +386,7 @@ function buildPm(ctx: SequenceContext, answers: PmAnswers): ResolvedRoutine {
   }
   const tomorrowScheduled = ctx.settings.weeklySchedule[weekdayOf(addDays(ctx.date, 1))]
   if (tomorrowScheduled === 'office') {
-    b.adviseIf('certain-dri-extra', 'Office tomorrow (no gym): Certain Dri goes on tonight before bed.')
+    b.adviseIf('certain-dri-extra', 'Office tomorrow: no morning shower planned? Certain Dri goes on tonight before bed.')
   }
 
   return {

@@ -670,22 +670,39 @@ button {
   font-variant-numeric: tabular-nums;
 }
 
-/* Opaque status-bar cover — content scrolls under it, never through it. */
+/* Progressive status-area blur (Instagram-style): three stacked backdrop
+   layers of increasing strength toward the top of the screen, each fading
+   out lower down — no tint, no visible edge, identical in light and dark. */
 .top-safe {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: var(--safe-top);
-  /* Pure gradient blur, no tint: strongest at the top of the screen, fading
-     to nothing at the bottom edge of the Dynamic Island — no visible line,
-     identical in light and dark mode. */
-  background: none;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+  height: calc(var(--safe-top) + 10px);
+  pointer-events: none;
   z-index: 25;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  mask-image: linear-gradient(to bottom, black 55%, transparent 96%);
+  -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 96%);
+}
+.top-safe::before,
+.top-safe::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+.top-safe::before {
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
+  mask-image: linear-gradient(to bottom, black 35%, transparent 72%);
+  -webkit-mask-image: linear-gradient(to bottom, black 35%, transparent 72%);
+}
+.top-safe::after {
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  mask-image: linear-gradient(to bottom, black 15%, transparent 48%);
+  -webkit-mask-image: linear-gradient(to bottom, black 15%, transparent 48%);
 }
 
 /* Installed app: iOS draws content from the very top; if it reports no inset

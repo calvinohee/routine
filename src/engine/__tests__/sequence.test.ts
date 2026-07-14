@@ -616,3 +616,53 @@ describe('clay choice driven by tracked spots', () => {
     expect(ids(buildSequence(c))).toContain('lrp-effaclar-clay')
   })
 })
+
+describe('AM shower question (replaces the gym-office day type)', () => {
+  test('office day + morning shower → shower, hair and post-shower Certain Dri notes', () => {
+    const c = ctx({
+      slot: 'am',
+      nightType: null,
+      answers: amAnswers({ dayType: 'office', amShower: true }),
+    })
+    const notes = buildSequence(c).advisories.join(' ')
+    expect(notes).toMatch(/CeraVe SA.*shower/i)
+    expect(notes).toMatch(/Sukin/)
+    expect(notes).toMatch(/Certain Dri after the shower/i)
+    expect(notes).toMatch(/Rexona/)
+  })
+
+  test('office day without a morning shower → no shower notes', () => {
+    const c = ctx({
+      slot: 'am',
+      nightType: null,
+      answers: amAnswers({ dayType: 'office', amShower: false }),
+    })
+    const notes = buildSequence(c).advisories.join(' ')
+    expect(notes).not.toMatch(/CeraVe/)
+    expect(notes).not.toMatch(/Sukin/)
+    expect(notes).not.toMatch(/Rexona/)
+  })
+
+  test('legacy gym-office sessions (no amShower answer) still imply a shower', () => {
+    const c = ctx({
+      slot: 'am',
+      nightType: null,
+      answers: amAnswers({ dayType: 'gym-office' }),
+    })
+    const notes = buildSequence(c).advisories.join(' ')
+    expect(notes).toMatch(/CeraVe SA/)
+    expect(notes).toMatch(/Rexona/)
+  })
+
+  test('a shower on a rest day gets shower + hair notes but no Certain Dri (office-only)', () => {
+    const c = ctx({
+      slot: 'am',
+      nightType: null,
+      date: MONDAY,
+      answers: amAnswers({ dayType: 'rest-indoors', amShower: true }),
+    })
+    const notes = buildSequence(c).advisories.join(' ')
+    expect(notes).toMatch(/CeraVe SA/)
+    expect(notes).not.toMatch(/Certain Dri/)
+  })
+})

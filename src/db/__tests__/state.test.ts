@@ -1,7 +1,7 @@
 import 'fake-indexeddb/auto'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { createDb, type RoutineDb } from '../db'
-import { buildEngineInput, getSettings, logSession, seedIfNeeded } from '../state'
+import { buildEngineInput, getSettings, logSession, putSettings, seedIfNeeded } from '../state'
 import { generateRoutine } from '../../engine/generate'
 import { pmAnswers } from '../../engine/__tests__/fixtures'
 
@@ -124,5 +124,20 @@ describe('redo semantics', () => {
     expect(input2.history.some((s) => s.date === '2026-07-07' && s.slot === 'pm')).toBe(false)
     // Same inputs → same decision (cold-start Tuesday → adapalene again).
     expect(generateRoutine(input2).routine?.nightType).toBe(result1.routine?.nightType)
+  })
+})
+
+describe('migrateSettings', () => {
+  test('legacy gym-office schedule entries become office on boot', async () => {
+    const settings = await getSettings(db)
+    await putSettings(db, {
+      ...settings,
+      weeklySchedule: { ...settings.weeklySchedule, monday: 'gym-office', tuesday: 'gym-office' },
+    })
+    await seedIfNeeded(db) // boot path runs the migration
+    const migrated = await getSettings(db)
+    expect(migrated.weeklySchedule.monday).toBe('office')
+    expect(migrated.weeklySchedule.tuesday).toBe('office')
+    expect(migrated.weeklySchedule.saturday).toBe('outdoor-run-day')
   })
 })

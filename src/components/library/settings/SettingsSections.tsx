@@ -183,7 +183,7 @@ export function ScheduleSettings({ settings }: { settings: Settings }) {
             </button>
             {editingDay === day && (
               <div className="chips" style={{ padding: '0 4px 8px' }}>
-                {[...DAY_TYPES, 'outdoor-run-day' as const].map((type) => (
+                {[...DAY_TYPES.filter((d) => d !== 'gym-office'), 'outdoor-run-day' as const].map((type) => (
                   <button
                     key={type}
                     className={`chip small ${settings.weeklySchedule[day] === type ? 'selected' : ''}`}

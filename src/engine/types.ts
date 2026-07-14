@@ -197,6 +197,8 @@ export type AdapalenePmReport = 'no-reaction' | 'stinging-on-application' | 'rea
 export interface AmAnswers {
   slot: 'am'
   dayType: DayType
+  /** Morning shower? Absent on legacy sessions — gym-office days implied one. */
+  amShower?: boolean
   /** Only present when today is a scheduled run day and dayType is outdoor. */
   runTiming?: RunTiming
   skinStates: SkinState[]

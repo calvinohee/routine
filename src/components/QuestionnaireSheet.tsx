@@ -22,12 +22,15 @@ import { Sheet } from './Sheet'
 import { ZONE_LABELS } from '../lib/labels'
 
 const DAY_TYPE_LABELS: Record<DayType, string> = {
-  'gym-office': 'Gym + office',
+  'gym-office': 'Gym + office', // legacy sessions only — no longer selectable
   office: 'Office',
   wfh: 'Working from home',
   outdoor: 'Outdoors',
   'rest-indoors': 'Rest day indoors',
 }
+
+/** Selectable day types — the shower question replaced 'gym-office'. */
+const SELECTABLE_DAY_TYPES = DAY_TYPES.filter((d) => d !== 'gym-office')
 
 const AM_SKIN: Array<[SkinState, string]> = [
   ['clear', 'Clear'],
@@ -59,10 +62,12 @@ interface Props {
 export function QuestionnaireSheet({ slot, date, settings, activeSpots, onSubmit, onClose }: Props) {
   const scheduled = settings.weeklySchedule[weekdayOf(date)]
   const isRunDay = scheduled === 'outdoor-run-day'
-  const defaultDayType: DayType = scheduled === 'outdoor-run-day' ? 'outdoor' : scheduled
+  const defaultDayType: DayType =
+    scheduled === 'outdoor-run-day' ? 'outdoor' : scheduled === 'gym-office' ? 'office' : scheduled
   const adapaleneQ = settings.adapalene.phase !== 'established'
 
   const [dayType, setDayType] = useState<DayType>(defaultDayType)
+  const [amShower, setAmShower] = useState(true)
   const [runTiming, setRunTiming] = useState<RunTiming>('no-run')
   const [followedAm, setFollowedAm] = useState<'yes' | 'modified' | 'skipped'>('yes')
   const [skin, setSkin] = useState<SkinState[]>(['clear'])
@@ -97,6 +102,7 @@ export function QuestionnaireSheet({ slot, date, settings, activeSpots, onSubmit
       onSubmit({
         slot: 'am',
         dayType,
+        amShower,
         ...(isRunDay && dayType === 'outdoor' ? { runTiming } : {}),
         skinStates: skin,
         newSpots,
@@ -129,13 +135,30 @@ export function QuestionnaireSheet({ slot, date, settings, activeSpots, onSubmit
         <section>
           <h3 className="q-heading">Today is…</h3>
           <div className="chips">
-            {DAY_TYPES.map((d) => (
+            {SELECTABLE_DAY_TYPES.map((d) => (
               <button
                 key={d}
                 className={`chip ${dayType === d ? 'selected' : ''}`}
                 onClick={() => setDayType(d)}
               >
                 {DAY_TYPE_LABELS[d]}
+              </button>
+            ))}
+          </div>
+          <h3 className="q-heading">Morning shower?</h3>
+          <div className="chips">
+            {(
+              [
+                [true, 'Yes'],
+                [false, 'No'],
+              ] as Array<[boolean, string]>
+            ).map(([value, label]) => (
+              <button
+                key={label}
+                className={`chip ${amShower === value ? 'selected' : ''}`}
+                onClick={() => setAmShower(value)}
+              >
+                {label}
               </button>
             ))}
           </div>

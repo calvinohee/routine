@@ -670,27 +670,40 @@ button {
   font-variant-numeric: tabular-nums;
 }
 
-/* Progressive status-area blur (Instagram-style): three stacked backdrop
-   layers of increasing strength toward the top of the screen, each fading
-   out lower down — no tint, no visible edge, identical in light and dark. */
+/* Progressive status-area blur (Instagram-style): confined strictly to the
+   strip between the top of the device and the bottom of the Dynamic Island.
+   Gentle enough that text stays ghost-readable even at the very top —
+   never a solid band. No tint; identical in light and dark. */
 .top-safe {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: calc(var(--safe-top) + 10px);
+  height: var(--safe-top);
   pointer-events: none;
   z-index: 25;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  mask-image: linear-gradient(to bottom, black 55%, transparent 96%);
-  -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 96%);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
 }
 .top-safe::before,
 .top-safe::after {
   content: '';
   position: absolute;
   inset: 0;
+}
+.top-safe::before {
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  mask-image: linear-gradient(to bottom, black 40%, transparent 80%);
+  -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 80%);
+}
+.top-safe::after {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  mask-image: linear-gradient(to bottom, black 12%, transparent 55%);
+  -webkit-mask-image: linear-gradient(to bottom, black 12%, transparent 55%);
 }
 .top-safe::before {
   backdrop-filter: blur(9px);
